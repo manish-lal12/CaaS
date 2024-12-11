@@ -1,0 +1,4 @@
+- name: Create container
+  community.docker.docker_container:
+    name: nginx
+    image: nginx:alpine3.20

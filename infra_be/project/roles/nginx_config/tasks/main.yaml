@@ -1,0 +1,9 @@
+- name: Create nginx configuration file
+  ansible.builtin.template:
+    src: templates/nginx_conf.j2
+    dest: /etc/nginx/conf.d/{{ CONTAINER_DETAIL.CONTAINER_NAME }}.conf
+    mode: "0644"
+# - name: Restart nginx
+#   ansible.builtin.service:
+#     name: nginx
+#     state: restarted

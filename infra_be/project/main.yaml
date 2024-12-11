@@ -1,0 +1,10 @@
+- name: Deploying_infra
+  hosts: vm
+  vars_files:
+    - vars.yaml
+  roles:
+    - role: ping
+    - role: create_container
+      when: CREATE_CONTAINER == true
+    - role: nginx_config
+      when: CREATE_NGINX_CONFIG == true
