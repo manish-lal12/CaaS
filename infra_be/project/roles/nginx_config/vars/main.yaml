@@ -1,6 +1,0 @@
-CONTAINER_DETAIL:
-  CONTAINER_NAME: "web1"
-DOMAIN_NAME: aaraz.me
-PROTOCOL: "http"
-IP: "0.0.0.0"
-PORT: "8080"

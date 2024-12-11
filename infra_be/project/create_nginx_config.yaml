@@ -1,0 +1,7 @@
+- name: Deploy_nginx_config
+  hosts: vm
+  vars_files:
+    - vars.yaml
+  roles:
+    - role: ping
+    - role: nginx_config

@@ -1,11 +1,11 @@
 server {
     listen 443 ssl;
-    server_name {{DOMAIN_NAME}};
+    server_name {{domain_name}};
     ssl_certificate /etc/nginx/conf.d/Certs/aaraz.me/aaraz_ca_certificate.pem;
     ssl_certificate_key /etc/nginx/conf.d/Certs/aaraz.me/aaraz_origin_private.pem;
     location / {
-        proxy_pass {{PROTOCOL}}://{{IP}}:{{PORT}}$request_uri;
-        access_log /var/log/nginx/{{CONTAINER_DETAIL.CONTAINER_NAME}}.access.log;
+        proxy_pass {{protocol}}://{{ip}}:{{port}}$request_uri;
+        access_log /var/log/nginx/{{container_name}}.access.log;
         add_header X-Served-By $host;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Scheme $scheme;

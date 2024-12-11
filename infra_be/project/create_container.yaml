@@ -1,0 +1,7 @@
+- name: Deploy_container
+  hosts: vm
+  vars_files:
+    - vars.yaml
+  roles:
+    - role: ping
+    - role: create_container
