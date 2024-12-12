@@ -2,6 +2,9 @@
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: "{{ image }}:{{ tag }}"
+    cpus: 1
+    memory: 512M
+    hostname: "{{ container_name }}"
     # To use storage limit the docker need storage setup with xfs and pquota
     # storage_opts:
     #   size: 10G
