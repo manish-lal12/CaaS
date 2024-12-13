@@ -1,7 +1,7 @@
-- name: Deploy_container
+- name: Create Docker Network
   hosts: vm
   vars_files:
     - vars.yaml
   roles:
     - role: ping
-    - role: create_container
+    - role: docker_network

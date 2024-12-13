@@ -5,7 +5,7 @@ server {
     ssl_certificate_key /etc/nginx/conf.d/Certs/aaraz.me/aaraz_origin_private.pem;
     location / {
         proxy_pass {{protocol}}://{{ip}}:{{port}}$request_uri;
-        access_log /var/log/nginx/{{container_name}}.access.log;
+        access_log /var/log/nginx/{{container_name}}_{{config_name}}.access.log;
         add_header X-Served-By $host;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Scheme $scheme;

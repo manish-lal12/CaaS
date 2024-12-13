@@ -1,7 +1,7 @@
-- name: Create Docker Network
+- name: Delete nginx config
   hosts: vm
   vars_files:
     - vars.yaml
   roles:
     - role: ping
-    - role: create_docker_network
+    - role: delete_nginx_config

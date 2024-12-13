@@ -10,4 +10,4 @@
     #   size: 10G
     networks:
       - name: "{{ network }}"
-    state: healthy
+    state: "{{ state }}"
