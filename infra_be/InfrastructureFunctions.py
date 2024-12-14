@@ -11,34 +11,58 @@ from type import (
 )
 
 
+########################################## Docker Network ##########################################
 def CreateDockerNetwork(
     CreateNetworkData: DockerNetworkData,
 ) -> DockerNetworkReturnData:
     res: Runner = run(
         private_data_dir=".",
-        playbook="create_docker_network.yaml",
+        playbook="docker_network/create_network.yaml",
         extravars=CreateNetworkData.model_dump(),  # model_dump is converting to dict
     )
     ReturnData = DockerNetworkReturnData(return_code=res.rc)
     return ReturnData
 
 
+def DeleteDockerNetwork(
+    DeleteNetworkData: DockerNetworkData,
+) -> DockerNetworkReturnData:
+    res: Runner = run(
+        private_data_dir=".",
+        playbook="docker_network/delete_network.yaml",
+        extravars=DeleteNetworkData.model_dump(),  # model_dump is converting to dict
+    )
+    ReturnData = DockerNetworkReturnData(return_code=res.rc)
+    return ReturnData
+
+
+########################################## Nginx Config ############################################
 def CreateNginxConfig(
     NginxConfigData: CreateNginxConfigData,
 ) -> CreateNginxConfigReturnData:
     res: Runner = run(
         private_data_dir=".",
-        playbook="create_nginx_config.yaml",
+        playbook="nginx/create_config.yaml",
         extravars=NginxConfigData.model_dump(),  # model_dump is converting to dict
     )
     ReturnData = CreateNginxConfigReturnData(return_code=res.rc)
     return ReturnData
 
 
-def Container(ContainerData: ContainerData) -> ContainerReturnData:
+def DeleteNginxConfig(ConfigData: DeleteNginxConfigData) -> DeleteNginxConfigReturnData:
     res: Runner = run(
         private_data_dir=".",
-        playbook="container.yaml",
+        playbook="nginx/delete_config.yaml",
+        extravars=ConfigData.model_dump(),
+    )
+    return DeleteNginxConfigReturnData(return_code=res.rc)
+
+
+########################################## Container ###############################################
+def CreateContainer(ContainerData: ContainerData) -> ContainerReturnData:
+    res: Runner = run(
+        private_data_dir=".",
+        playbook="container/create_container.yaml",
         extravars=ContainerData.model_dump(),
     )
     container_ip = ""
@@ -50,14 +74,15 @@ def Container(ContainerData: ContainerData) -> ContainerReturnData:
         except:
             # print("IPNotFound")
             pass
-    ReturnData = ContainerReturnData(container_ip=container_ip)
+    ReturnData = ContainerReturnData(container_ip=container_ip, return_code=res.rc)
     return ReturnData
 
 
-def DeleteNginxConfig(ConfigData: DeleteNginxConfigData) -> DeleteNginxConfigReturnData:
+def DeleteContainer(ContainerData: ContainerData) -> ContainerReturnData:
     res: Runner = run(
         private_data_dir=".",
-        playbook="delete_nginx_config.yaml",
-        extravars=ConfigData.model_dump(),
+        playbook="container/delete_container.yaml",
+        extravars=ContainerData.model_dump(),
     )
-    return DeleteNginxConfigReturnData(return_code=res.rc)
+    ReturnData = ContainerReturnData(container_ip="None", return_code=res.rc)
+    return ReturnData

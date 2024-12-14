@@ -1,0 +1,20 @@
+- name: Container
+  hosts: vm
+  tasks:
+    - name: Get container detail
+      community.docker.docker_container_info:
+        name: "{{ container_name }}"
+      register: result
+    - name: Delete container
+      failed_when: result.exists == false
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image }}:{{ tag }}"
+        cpus: 1
+        memory: 512M
+        # To use storage limit the docker need storage setup with xfs and pquota
+        # storage_opts:
+        #   size: 10G
+        networks:
+          - name: "{{ network }}"
+        state: absent

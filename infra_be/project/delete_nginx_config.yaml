@@ -1,7 +1,0 @@
-- name: Delete nginx config
-  hosts: vm
-  vars_files:
-    - vars.yaml
-  roles:
-    - role: ping
-    - role: delete_nginx_config

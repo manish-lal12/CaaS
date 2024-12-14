@@ -1,0 +1,15 @@
+- name: Docker Network
+  hosts: vm
+  tasks:
+    - name: Get network info
+      community.docker.docker_network_info:
+        name: "{{ network_name }}"
+      register: result
+    - name: Delete docker network
+      failed_when: result.exists == false
+      community.docker.docker_network:
+        name: "{{ network_name }}"
+        ipam_config:
+          - subnet: "{{ network_subnet }}"
+            gateway: "{{ network_gateway }}"
+        state: absent
