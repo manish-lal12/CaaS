@@ -2,3 +2,5 @@
 artifacts
 __pycache__
 extravars
+dist
+node_modules
