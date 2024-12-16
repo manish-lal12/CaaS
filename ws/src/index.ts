@@ -1,22 +1,28 @@
 import { createServer } from "http";
-import WebSocket, { WebSocketServer } from "ws";
-
+import { WebSocketServer } from "ws";
+import { docker } from "./lib/Docker";
 const mainServer = createServer();
 const wss = new WebSocketServer({ server: mainServer });
 
-wss.on("connection", (ws) => {
+wss.on("connection", async (ws) => {
+  const container = docker.getContainer("76941c597e89");
   console.log("client connected");
-  const cws = new WebSocket(
-    "ws://192.168.122.2:2375/containers/58e8737cd5d6/attach/ws?stream=1&stdout=1&stdin=1&logs=0&stderr=1"
-  );
-  cws.on("open", () => {
-    console.log("container connected");
+  const exec = await container.exec({
+    Cmd: ["/bin/sh"],
+    AttachStdin: true,
+    AttachStdout: true,
+    User: "root",
+    Tty: true,
+  });
+  const stream = await exec.start({ stdin: true, hijack: true, Tty: true });
+  stream.on("data", (data) => {
+    ws.send(data.toString());
   });
   ws.on("message", (msg) => {
-    cws.send(msg);
+    stream.write(msg);
   });
-  cws.on("message", (msg) => {
-    ws.send(msg);
+  ws.on("close", () => {
+    console.log("client disconnected");
   });
 });
 
