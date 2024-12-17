@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { docker } from "./lib/Docker";
 const mainServer = createServer();
-const wss = new WebSocketServer({ server: mainServer });
+const wss = new WebSocketServer({ noServer: true });
 
 wss.on("connection", async (ws, req) => {
   const CONTAINER_ID = "58e8737cd5d6";
@@ -51,6 +51,24 @@ wss.on("connection", async (ws, req) => {
       });
       await kill_exec.start({ stdin: true });
     }
+  });
+});
+
+mainServer.on("upgrade", function upgrade(request, socket, head) {
+  socket.on("error", (err: any) => {
+    console.error(err);
+  });
+
+  // CODE FOR AUTH CHECK
+  // socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+  // socket.destroy();
+  // return;
+
+  socket.removeListener("error", (err: any) => {
+    console.error(err);
+  });
+  wss.handleUpgrade(request, socket, head, function (ws) {
+    wss.emit("connection", ws, request);
   });
 });
 
