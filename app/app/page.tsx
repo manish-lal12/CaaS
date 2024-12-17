@@ -7,7 +7,7 @@ const TerminalComponent = dynamic(() => import("./terminal/terminal"), {
 function Home() {
   return (
     <div className="m-5">
-      <TerminalComponent />;
+      <TerminalComponent />
     </div>
   );
 }
