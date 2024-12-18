@@ -27,6 +27,7 @@ model User {
   updatedAt     DateTime        @updatedAt
   // For app
   username      String?
+  welcomed      Boolean         @default(false)
   network       network?        @relation(fields: [vpc], references: [id])
   vpc           String?         @unique
   inbound_rules inbound_rules[]
