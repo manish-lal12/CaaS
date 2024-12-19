@@ -108,6 +108,7 @@ enum CONTAINER_STATE {
 
 model containers {
   name          String          @id
+  nick_name     String?
   node          String
   image         String
   tag           String
@@ -116,6 +117,7 @@ model containers {
   updatedAt     DateTime        @updatedAt
   network       network         @relation(fields: [networkId], references: [id])
   networkId     String
+  ip_address    String
   inbound_rules inbound_rules[]
   User          User            @relation(fields: [userId], references: [id])
   userId        String
