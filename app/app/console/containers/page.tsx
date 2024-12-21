@@ -14,6 +14,10 @@ function ContainersPage() {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-10 ">
+          <ContainerCard state={"on"} container_id="sdsd" />
+          <ContainerCard state={"off"} container_id="sdsd" />
+          <ContainerCard state={"off"} container_id="sdsd" />
+          <ContainerCard state={"off"} container_id="sdsd" />
           <ContainerCard state={"off"} container_id="sdsd" />
           <ContainerCard state={"off"} container_id="sdsd" />
           <ContainerCard state={"off"} container_id="sdsd" />

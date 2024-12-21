@@ -39,7 +39,11 @@ function ContainerDetailTabs() {
         <div className="bg-neutral-50 rounded-md p-2">
           <div className="text-2xl font-bold">Details</div>
           <div className="p-3 text-lg text-gray-600">
-            Name(id) - jskdfhsd-f7s89df7uref-bydsiufs7d8-9fsf8
+            Id - jskdfhsd-f7s89df7uref-bydsiufs7d8-9fsf8
+          </div>
+          <Separator />
+          <div className="p-3 text-lg text-gray-600">
+            Name - daldia macleren
           </div>
           <Separator />
           <div className="p-3 text-lg text-gray-600">
@@ -52,6 +56,10 @@ function ContainerDetailTabs() {
           <Separator />
           <div className="p-3 text-lg text-gray-600">
             Internal IP - 11.0.0.1
+          </div>
+          <Separator />
+          <div className="p-3 text-lg text-gray-600">
+            Created - 2027-20-55 12:02:12
           </div>
         </div>
       </TabsContent>

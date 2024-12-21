@@ -19,7 +19,11 @@ import {
 import { usePathname } from "next/navigation";
 
 function SideBar() {
-  const path = usePathname();
+  const path = usePathname().slice(1).split("/");
+  if (path[0] === "console" && path.length === 1) {
+    return <></>;
+  }
+
   return (
     <div
       className="p-2 border-r-2 border-neutral-200 rounded-xl w-48 xl:w-60 hidden lg:block space-y-2"
@@ -37,7 +41,7 @@ function SideBar() {
       >
         <CircleUserRoundIcon />
         <span className="flex-1 ms-3 whitespace-nowrap text-gray-900">
-          Profile
+          Account
         </span>
       </Link>
       <Link
@@ -62,7 +66,6 @@ function SideBar() {
         <Network />
         <span className="flex-1 ms-3 whitespace-nowrap text-gray-900">VPC</span>
       </Link>
-
       {/* <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group ">

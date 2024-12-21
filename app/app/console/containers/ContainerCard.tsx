@@ -13,7 +13,7 @@ function ContainerCard({
   return (
     <Link
       href={`containers/${container_id}`}
-      className="h-72 shadow-lg hover:bg-neutral-50 p-6 space-y-6"
+      className="h-72 shadow-lg hover:bg-neutral-50 p-6 space-y-6 rounded-lg"
     >
       <div className="text-2xl shadow-sm p-2">Amber foster</div>
       <div className="flex gap-6">

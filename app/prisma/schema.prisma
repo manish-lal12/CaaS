@@ -91,6 +91,7 @@ model Authenticator {
 // MODELS FOR APP ////////////////////////////////////////////////////////////////////////////
 model network {
   id         String       @id @default(cuid())
+  vpc_name   String
   node       String
   network    String
   cidr       String
