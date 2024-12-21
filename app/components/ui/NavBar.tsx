@@ -51,7 +51,7 @@ function NavBar() {
             <li>
               <Link
                 href={"/console"}
-                className="block text-gray-900 rounded-full md:border-0 bg-amber-400 py-2 px-3"
+                className="py-2 px-3 text-blue-500 hover:text-blue-800 underline-offset-2 hover:underline"
               >
                 My Console
               </Link>

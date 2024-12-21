@@ -26,15 +26,15 @@ function SideBar() {
 
   return (
     <div
-      className="p-2 border-r-2 border-neutral-200 rounded-xl w-48 xl:w-60 hidden lg:block space-y-2"
+      className="p-2 border-r-2 border-neutral-200 w-48 xl:w-60 hidden lg:block space-y-2"
       style={{
         height: "calc(100vh - 65px)",
       }}
     >
       <Link
-        href="/console/profile"
+        href="/console/account"
         className={`flex items-center p-2 rounded-lg ${
-          path.includes("profile")
+          path.includes("account")
             ? "bg-gray-100 text-amber-500"
             : "text-grey-900"
         } hover:bg-gray-100 group`}

@@ -25,7 +25,7 @@ export function ConsoleOptions() {
     <div className="rounded-xl border-2">
       <div className="text-2xl font-bold p-2 border-b-2">Services</div>
       <div className="p-4 text-xl space-y-4">
-        <Link href={"/console/profile"} className="flex gap-4 items-center">
+        <Link href={"/console/account"} className="flex gap-4 items-center">
           <Image
             src={"https://static.aaraz.me/caas/profile_logo.png"}
             alt=""
@@ -81,26 +81,26 @@ export function ConsoleOptions() {
   );
 }
 const invoices = [
-  // {
-  //   invoice: "INV001_INV001",
-  //   totalAmount: "11.0.0.1",
-  // },
-  // {
-  //   invoice: "INV001_INV001",
-  //   totalAmount: "11.0.0.1",
-  // },
-  // {
-  //   invoice: "INV001_INV001",
-  //   totalAmount: "11.0.0.1",
-  // },
-  // {
-  //   invoice: "INV001_INV001",
-  //   totalAmount: "11.0.0.1",
-  // },
-  // {
-  //   invoice: "INV001_INV001",
-  //   totalAmount: "11.0.0.1",
-  // },
+  {
+    invoice: "INV001_INV001",
+    totalAmount: "11.0.0.1",
+  },
+  {
+    invoice: "INV001_INV001",
+    totalAmount: "11.0.0.1",
+  },
+  {
+    invoice: "INV001_INV001",
+    totalAmount: "11.0.0.1",
+  },
+  {
+    invoice: "INV001_INV001",
+    totalAmount: "11.0.0.1",
+  },
+  {
+    invoice: "INV001_INV001",
+    totalAmount: "11.0.0.1",
+  },
 ];
 
 export function ConsoleContainers() {
