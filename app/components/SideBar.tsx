@@ -28,7 +28,7 @@ function SideBar() {
     <div
       className="p-2 border-r-2 border-neutral-200 rounded-xl w-48 xl:w-60 hidden lg:block space-y-2"
       style={{
-        height: "calc(100vh - 64px)",
+        height: "calc(100vh - 65px)",
       }}
     >
       <Link

@@ -28,8 +28,7 @@ model User {
   // For app
   username      String?
   welcomed      Boolean         @default(false)
-  network       network?        @relation(fields: [vpc], references: [id])
-  vpc           String?         @unique
+  vpc           vpc[]
   inbound_rules inbound_rules[]
   containers    containers[]
 }
@@ -89,7 +88,7 @@ model Authenticator {
 }
 
 // MODELS FOR APP ////////////////////////////////////////////////////////////////////////////
-model network {
+model vpc {
   id         String       @id @default(cuid())
   vpc_name   String
   node       String
@@ -98,8 +97,9 @@ model network {
   gateway    String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-  User       User?
   containers containers[]
+  User       User         @relation(fields: [userId], references: [id])
+  userId     String
 }
 
 enum CONTAINER_STATE {
@@ -116,8 +116,8 @@ model containers {
   state         CONTAINER_STATE
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  network       network         @relation(fields: [networkId], references: [id])
-  networkId     String
+  vpc           vpc             @relation(fields: [vpcId], references: [id])
+  vpcId         String
   ip_address    String
   inbound_rules inbound_rules[]
   User          User            @relation(fields: [userId], references: [id])
