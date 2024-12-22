@@ -26,7 +26,7 @@ function SideBar() {
 
   return (
     <div
-      className="p-2 border-r-2 border-neutral-200 w-48 xl:w-60 hidden lg:block space-y-2"
+      className="p-2 border-r-2 border-neutral-200 dark:border-zinc-900 w-48 xl:w-60 hidden lg:block space-y-2"
       style={{
         height: "calc(100vh - 65px)",
       }}
@@ -35,12 +35,12 @@ function SideBar() {
         href="/console/account"
         className={`flex items-center p-2 rounded-lg ${
           path.includes("account")
-            ? "bg-gray-100 text-amber-500"
+            ? "bg-gray-100 dark:bg-zinc-900 text-amber-500"
             : "text-grey-900"
-        } hover:bg-gray-100 group`}
+        } hover:bg-gray-100 dark:hover:bg-zinc-900 group`}
       >
         <CircleUserRoundIcon />
-        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900">
+        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900 dark:text-white">
           Account
         </span>
       </Link>
@@ -48,23 +48,27 @@ function SideBar() {
         href="/console/containers"
         className={`flex items-center p-2 rounded-lg ${
           path.includes("containers")
-            ? "bg-gray-100 text-amber-500"
+            ? "bg-gray-100 dark:bg-zinc-900 text-amber-500"
             : "text-grey-900"
-        } hover:bg-gray-100 group`}
+        } hover:bg-gray-100 dark:hover:bg-zinc-900 group`}
       >
         <Box />
-        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900">
+        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900 dark:text-white">
           Containers
         </span>
       </Link>
       <Link
         href="/console/vpc"
         className={`flex items-center p-2 rounded-lg ${
-          path.includes("vpc") ? "bg-gray-100 text-amber-500" : "text-grey-900"
-        } hover:bg-gray-100 group`}
+          path.includes("vpc")
+            ? "bg-gray-100 text-amber-500 dark:bg-zinc-900"
+            : "text-grey-900"
+        } hover:bg-gray-100 dark:hover:bg-zinc-900 group`}
       >
         <Network />
-        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900">VPC</span>
+        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900 dark:text-white">
+          VPC
+        </span>
       </Link>
       {/* <Accordion type="single" collapsible>
         <AccordionItem value="item-1">

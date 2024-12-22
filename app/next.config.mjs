@@ -2,7 +2,10 @@
 const nextConfig = {
     reactStrictMode: false,
     images: {
-        domains: ['static.aaraz.me']
+        remotePatterns: [{
+            protocol: "https",
+            hostname: "static.aaraz.me"
+        }],
     }
 };
 

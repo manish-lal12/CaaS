@@ -23,6 +23,19 @@
   background: #555;
 }
 
+/* Dark mode styles */
+.dark ::-webkit-scrollbar-track {
+  background: #333333;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #555555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #777777;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
