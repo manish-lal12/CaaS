@@ -18,153 +18,13 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 function ContainersPage() {
-  const invoices = [
+  const containers = [
     {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
+      nick_name: "Polar hunter",
+      status: "running",
+      node: "oracle_arm",
       createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
-    },
-    {
-      invoice: "Polar hunter",
-      paymentStatus: "Paid",
-      totalAmount: "11.0.0.1",
-      paymentMethod: "oracle_arm",
-      createdAt: "2021-10-10 12:45:00",
+      internal_ip: "11.0.0.1",
     },
   ];
   return (
@@ -206,18 +66,18 @@ function ContainersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.invoice}>
+              {containers.map((detail) => (
+                <TableRow key={detail.nick_name}>
                   <TableCell className="font-medium">
-                    {invoice.invoice}
+                    {detail.nick_name}
                   </TableCell>
                   <TableCell>
                     <Badge variant={"running"}>running</Badge>
                   </TableCell>
-                  <TableCell>{invoice.paymentMethod}</TableCell>
-                  <TableCell>{invoice.createdAt}</TableCell>
+                  <TableCell>{detail.node}</TableCell>
+                  <TableCell>{detail.createdAt}</TableCell>
                   <TableCell className="text-right">
-                    {invoice.totalAmount}
+                    {detail.internal_ip}
                   </TableCell>
                 </TableRow>
               ))}

@@ -125,17 +125,17 @@ model containers {
 }
 
 model inbound_rules {
-  id             String     @id @default(cuid())
-  node           String
-  rule_name      String // it is config_name in nginx infra. backend
-  domain_name    String
-  protocol       String
-  container_ip   String
-  port           String
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  User           User       @relation(fields: [userId], references: [id])
-  userId         String
-  containers     containers @relation(fields: [containersName], references: [name])
-  containersName String
+  id               String     @id @default(cuid())
+  node             String
+  rule_name        String // it is config_name in nginx infra. backend
+  domain_name      String
+  service_protocol String
+  container_ip     String
+  port             Int
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  User             User       @relation(fields: [userId], references: [id])
+  userId           String
+  containers       containers @relation(fields: [containersName], references: [name])
+  containersName   String
 }
