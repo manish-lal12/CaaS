@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -11,44 +10,38 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Edit, Loader2 } from "lucide-react";
 import { useState } from "react";
-
-export function CreateContainer() {
+function EditVpc({ VpcName }: { VpcName: string }) {
+  const [vpcNameState, setVpcName] = useState(VpcName);
   const [loading, setLoading] = useState(false);
-  const [containerName, setContainerName] = useState("");
-  async function HandleSubmit() {
+  async function submitHandler() {
     setLoading(true);
-    // submit code
+    ///////////
     setLoading(false);
   }
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={"sm"}>Add Container</Button>
+        <Edit className="hover:text-blue-500 cursor-pointer" />
       </DialogTrigger>
-      <DialogContent className="w-fit">
+      <DialogContent className="md:w-fit">
         <DialogHeader>
-          <DialogTitle>Create Container</DialogTitle>
-          <DialogDescription>
-            Enter Details required or create a new container
-          </DialogDescription>
+          <DialogTitle>New Name of VPC</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Container Name <span className="text-red-600">*</span>
-            </Label>
+        <div className="space-y-2">
+          <div className="flex items-center gap-4">
+            <Label>Name: </Label>
             <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-              value={containerName}
+              value={vpcNameState}
               onChange={(e) => {
-                setContainerName(e.target.value);
+                setVpcName(e.target.value);
               }}
             />
           </div>
+          {vpcNameState.length < 3 && (
+            <div className="text-red-600 text-right">Min 3 chars</div>
+          )}
         </div>
         <DialogFooter>
           {loading ? (
@@ -58,12 +51,11 @@ export function CreateContainer() {
             </Button>
           ) : (
             <Button
-              disabled={containerName.length < 3}
-              size={"lg"}
+              disabled={vpcNameState.length < 3}
               className="w-1/2 text-lg"
-              onClick={HandleSubmit}
+              type="submit"
             >
-              Create
+              Update
             </Button>
           )}
         </DialogFooter>
@@ -71,3 +63,5 @@ export function CreateContainer() {
     </Dialog>
   );
 }
+
+export default EditVpc;

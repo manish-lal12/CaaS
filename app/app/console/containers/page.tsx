@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import { CreateContainer } from "./CreateContainer";
 import {
   Select,
@@ -54,10 +53,9 @@ function ContainersPage() {
             </SelectContent>
           </Select>
         </div>
-        <Separator />
         <div className="max-h-[600px] overflow-auto max-w-[90vw]">
           <Table>
-            <TableHeader>
+            <TableHeader className="dark:bg-zinc-800 bg-muted">
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Status</TableHead>
