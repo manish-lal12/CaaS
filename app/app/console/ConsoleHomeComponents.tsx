@@ -170,7 +170,7 @@ export function ConsoleContainers() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">Name</TableHead>
-              <TableHead className="">Internal IP</TableHead>
+              <TableHead className="">Container IP</TableHead>
               <TableHead className="text-right">Status</TableHead>
             </TableRow>
           </TableHeader>

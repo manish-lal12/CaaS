@@ -19,6 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import SideBarLinks from "../SideBarLinks";
 
 function NavBar() {
   const { setTheme, theme } = useTheme();
@@ -101,6 +102,7 @@ function NavBar() {
               >
                 My Console
               </Link>
+              <SideBarLinks />
             </div>
           </SheetContent>
         </Sheet>
