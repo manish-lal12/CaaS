@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Loader2 } from "lucide-react";
 import { useState } from "react";
-function EditVpc({ VpcName }: { VpcName: string }) {
+function EditVpc({ VpcName, vpc_id }: { VpcName: string; vpc_id: string }) {
   const [vpcNameState, setVpcName] = useState(VpcName);
   const [loading, setLoading] = useState(false);
   async function submitHandler() {
@@ -54,6 +54,7 @@ function EditVpc({ VpcName }: { VpcName: string }) {
               disabled={vpcNameState.length < 3}
               className="w-1/2 text-lg"
               type="submit"
+              onClick={submitHandler}
             >
               Update
             </Button>

@@ -2,24 +2,37 @@
 import prisma from "@/lib/db";
 import axios from "axios";
 import { container_create_schema } from "@/lib/zod";
+import { ContainerActions, INFRA_BE_URL } from "@/lib/vars";
+import { v4 as uuid } from "uuid";
+import { $Enums } from "@prisma/client";
 
 export async function startContainer({
   container_name,
 }: {
   container_name: string;
 }) {
+  const userEmail = "zyx";
   try {
-    const container = await prisma.containers.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        name: container_name,
+        email: userEmail,
       },
     });
-    const startContainerResponse = await axios.post("backendURL", {
-      container_name,
-      image: container?.image,
-      tag: container?.tag,
-      network: container?.ip_address,
-      storage: "3G",
+    const container = await prisma.containers.findUnique({
+      where: {
+        name: container_name,
+        userId: user?.id,
+      },
+    });
+    if (!container) {
+      return {
+        success: false,
+        message: "Error, container not found",
+      };
+    }
+    const startContainerResponse = await axios.post(INFRA_BE_URL, {
+      container_name: container_name,
+      action: ContainerActions.START,
     });
     if (startContainerResponse.data !== 0) {
       return {
@@ -27,11 +40,20 @@ export async function startContainer({
         message: "Error, failed to start the container",
       };
     }
+    await prisma.containers.update({
+      where: {
+        name: container_name,
+      },
+      data: {
+        state: $Enums.CONTAINER_STATE.STARTED,
+      },
+    });
     return {
       success: true,
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to start the container",
@@ -44,18 +66,31 @@ export async function stopContainer({
 }: {
   container_name: string;
 }) {
+  const userEmail = "zyx";
   try {
-    const container = await prisma.containers.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        name: container_name,
+        email: userEmail,
       },
     });
-    const stopContainerResponse = await axios.post("backendUrl", {
-      container_name,
-      image: container?.image,
-      tag: container?.tag,
-      network: container?.ip_address,
-      storage: "3G",
+
+    const container = await prisma.containers.findUnique({
+      where: {
+        name: container_name,
+        userId: user?.id,
+      },
+    });
+
+    if (!container) {
+      return {
+        success: false,
+        message: "Error, container not found",
+      };
+    }
+
+    const stopContainerResponse = await axios.post(INFRA_BE_URL, {
+      container_name: container_name,
+      action: ContainerActions.STOP,
     });
     if (stopContainerResponse.data !== 0) {
       return {
@@ -63,11 +98,20 @@ export async function stopContainer({
         message: "Error, failed to stop the container",
       };
     }
+    await prisma.containers.update({
+      where: {
+        name: container_name,
+      },
+      data: {
+        state: $Enums.CONTAINER_STATE.STOPPED,
+      },
+    });
     return {
       success: true,
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to stop the container",
@@ -77,16 +121,17 @@ export async function stopContainer({
 
 export async function createContainer({
   container_name,
-  vpc_name,
+  vpc_id,
 }: {
   container_name: string;
-  vpc_name?: string;
+  vpc_id: string;
 }) {
+  const userEmail = "zyx";
   try {
     // validation
     const validation = container_create_schema.safeParse({
-      container_name,
-      vpc: vpc_name,
+      container_name: container_name,
+      vpc: vpc_id,
     });
     if (!validation.success) {
       return new Error(
@@ -95,13 +140,22 @@ export async function createContainer({
           .join(", ")}`
       );
     }
-    const vpc = await prisma.vpc.findFirst({
+
+    const user = await prisma.user.findUnique({
       where: {
-        vpc_name: vpc_name ? vpc_name : "default",
+        email: userEmail,
       },
     });
-    const createContainerResponse = await axios.post("backendUrl", {
-      container_name,
+
+    const vpc = await prisma.vpc.findUnique({
+      where: {
+        id: vpc_id,
+        userId: user?.id,
+      },
+    });
+    const ContainerName = uuid();
+    const createContainerResponse = await axios.post(INFRA_BE_URL, {
+      container_name: ContainerName,
       image: "aaraz/caas",
       tag: "1.1",
       network: vpc?.id,
@@ -117,15 +171,15 @@ export async function createContainer({
     const containerIP = createContainerResponse.data.container_ip;
     await prisma.containers.create({
       data: {
-        name: container_name,
+        name: ContainerName,
+        nick_name: container_name,
         node: "oracle_arm",
         image: "aaraz/caas",
         tag: "1.1",
-        state: "STARTED",
+        state: $Enums.CONTAINER_STATE.STARTED,
         vpcId: vpc?.id as string,
         ip_address: containerIP,
-        // inbound rules
-        userId: vpc?.userId as string,
+        userId: user?.id as string,
       },
     });
     return {
@@ -133,6 +187,7 @@ export async function createContainer({
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "failed to create container",
@@ -144,23 +199,39 @@ export async function deleteContainer({
 }: {
   container_name: string;
 }) {
+  const userEmail = "zyx";
   try {
-    const container = await prisma.containers.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        name: container_name,
+        email: userEmail,
       },
     });
-    const deleteContainerResponse = await axios.post("backendURl", {
+
+    const container = await prisma.containers.findUnique({
+      where: {
+        name: container_name,
+        userId: user?.id,
+      },
+    });
+
+    if (!container) {
+      return {
+        success: false,
+        message: "Error, container not found",
+      };
+    }
+
+    const deleteContainerResponse = await axios.post(INFRA_BE_URL, {
       container_name,
       image: container?.image,
       tag: container?.tag,
-      network: container?.ip_address,
+      network: container.vpcId,
       storage: "3G",
     });
     if (deleteContainerResponse.data !== 0) {
       return {
         success: false,
-        message: "Error, failed to delete container",
+        message: "failed to delete container",
       };
     }
     await prisma.containers.delete({
@@ -173,6 +244,7 @@ export async function deleteContainer({
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to delete container",
@@ -185,18 +257,31 @@ export async function restartContainer({
 }: {
   container_name: string;
 }) {
+  const userEmail = "zyx";
   try {
-    const container = await prisma.containers.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        name: container_name,
+        email: userEmail,
       },
     });
-    const restartContainerResponse = await axios.post("backendURL", {
-      container_name,
-      image: container?.image,
-      tag: container?.tag,
-      network: container?.ip_address,
-      storage: "3G",
+
+    const container = await prisma.containers.findUnique({
+      where: {
+        name: container_name,
+        userId: user?.id,
+      },
+    });
+
+    if (!container) {
+      return {
+        success: false,
+        message: "Error, container not found",
+      };
+    }
+
+    const restartContainerResponse = await axios.post(INFRA_BE_URL, {
+      container_name: container_name,
+      action: ContainerActions.RESTART,
     });
     if (restartContainerResponse.data !== 0) {
       return {
@@ -209,6 +294,7 @@ export async function restartContainer({
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to restart container",

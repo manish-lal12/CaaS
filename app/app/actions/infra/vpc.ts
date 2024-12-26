@@ -2,12 +2,14 @@
 import prisma from "@/lib/db";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
-import { vpc_schema } from "@/lib/zod";
+import { add_vpc_schema, edit_vpc_schema } from "@/lib/zod";
+import { DEFAULT_VPC_NAME, INFRA_BE_URL } from "@/lib/vars";
 
 export async function createVPC({ vpc_name }: { vpc_name: string }) {
+  const userEmail = "abc@gmail.com";
   try {
     //validation
-    const validation = vpc_schema.safeParse({
+    const validation = add_vpc_schema.safeParse({
       name: vpc_name,
     });
     if (!validation.success) {
@@ -17,14 +19,13 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
           .join(", ")}`
       );
     }
-    const userEmail = "abc@gmail.com";
     const availableVPC = await prisma.available_vpc.findFirst({
       where: {
         used: false,
       },
     });
     const networkID = uuid();
-    const createVPCResponse = await axios.post("backendURL", {
+    const createVPCResponse = await axios.post(INFRA_BE_URL, {
       network_name: networkID,
       network_subnet: availableVPC?.cidr,
       network_gateway: availableVPC?.gateway,
@@ -45,12 +46,13 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
       await tx.vpc.create({
         data: {
           id: networkID,
-          vpc_name,
+          vpc_name: vpc_name,
           node: "oracle_arm",
           network: availableVPC?.network as string,
           cidr: availableVPC?.cidr as string,
           gateway: availableVPC?.gateway as string,
           userId: userId as string,
+          available_vpcId: availableVPC?.id as string,
         },
       });
       await tx.available_vpc.update({
@@ -67,6 +69,7 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to create VPC",
@@ -74,19 +77,18 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
   }
 }
 
-//cidr, and new VPC name
 export async function editVPC({
+  vpc_id,
   vpc_name,
-  cidr,
 }: {
   vpc_name: string;
-  cidr: string;
+  vpc_id: string;
 }) {
+  const userEmail = "xyz";
   try {
-    //validation
-    const validation = vpc_schema.safeParse({
+    const validation = edit_vpc_schema.safeParse({
       name: vpc_name,
-      cidr: cidr,
+      id: vpc_id,
     });
     if (!validation.success) {
       return new Error(
@@ -95,13 +97,18 @@ export async function editVPC({
           .join(", ")}`
       );
     }
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+    });
     await prisma.vpc.update({
       where: {
-        cidr,
+        id: vpc_id,
+        userId: user?.id as string,
       },
       data: {
-        // new name
-        vpc_name,
+        vpc_name: vpc_name,
       },
     });
     return {
@@ -109,6 +116,7 @@ export async function editVPC({
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to edit VPC",
@@ -116,18 +124,43 @@ export async function editVPC({
   }
 }
 
-export async function deleteVPC({ cidr }: { cidr: string }) {
+export async function deleteVPC({ vpc_id }: { vpc_id: string }) {
+  const userEmail = "xyz";
   try {
-    const vpc = await prisma.vpc.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        cidr,
+        email: userEmail,
       },
     });
-    if (vpc?.containers.length > 0) {
-      // return with error to delete containers
-      throw new Error("Delete all containers in the VPC");
+    const vpc = await prisma.vpc.findFirst({
+      where: {
+        id: vpc_id,
+        userId: user?.id as string,
+      },
+      include: {
+        containers: true,
+        available_vpc: true,
+      },
+    });
+    if (!vpc) {
+      return {
+        success: false,
+        message: "VPC not found",
+      };
     }
-    const deleteVPCResponse = await axios.post("backendURL", {
+    if (vpc?.containers.length !== 0) {
+      return {
+        success: false,
+        message: "VPC is not empty, delete all containers first",
+      };
+    }
+    if (vpc.vpc_name === DEFAULT_VPC_NAME) {
+      return {
+        success: false,
+        message: "Default VPC cannot be deleted",
+      };
+    }
+    const deleteVPCResponse = await axios.post(INFRA_BE_URL, {
       network_name: vpc?.id,
       network_subnet: vpc?.cidr,
       network_gateway: vpc?.gateway,
@@ -140,14 +173,25 @@ export async function deleteVPC({ cidr }: { cidr: string }) {
     }
     await prisma.vpc.delete({
       where: {
-        id: vpc?.id,
+        id: vpc_id,
       },
     });
+
+    await prisma.available_vpc.update({
+      where: {
+        id: vpc.available_vpcId,
+      },
+      data: {
+        used: false,
+      },
+    });
+
     return {
       success: true,
       message: "",
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to delete VPC",

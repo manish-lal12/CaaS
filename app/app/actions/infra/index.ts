@@ -1,29 +1,16 @@
-import {
-  createContainer,
-  deleteContainer,
-  restartContainer,
-  startContainer,
-  stopContainer,
-} from "./container_actions";
-import {
-  createInboundRule,
-  deleteInboundRule,
-  editInboundRule,
-} from "./inbound_rules";
-import { initializeUser } from "./initialize_user";
-import { createVPC, deleteVPC, editVPC } from "./vpc";
-
 export {
   createContainer,
   deleteContainer,
   restartContainer,
   startContainer,
   stopContainer,
+} from "./container_actions";
+export {
   createInboundRule,
   deleteInboundRule,
   editInboundRule,
-  initializeUser,
-  createVPC,
-  deleteVPC,
-  editVPC,
-};
+} from "./inbound_rules";
+export { initializeUser } from "./initialize_user";
+export { createVPC, deleteVPC, editVPC } from "./vpc";
+
+// TODO: check authentication before running any of these functions

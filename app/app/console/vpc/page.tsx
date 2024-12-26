@@ -25,27 +25,31 @@ import EditVpc from "./EditVpc";
 function VpcPage() {
   let vpcs = [
     {
-      name: "Default",
+      id: "xyz",
+      vpc_name: "Default",
       cidr: "11.0.0.0/24",
       gateway: "11.0.0.1",
     },
     {
-      name: "extra",
+      id: "xyz",
+      vpc_name: "extra",
       cidr: "12.0.0.1/24",
       gateway: "11.0.0.1",
     },
     {
-      name: "test",
+      id: "xyz",
+      vpc_name: "test",
       cidr: "15.2.2.5/24",
       gateway: "11.0.0.1",
     },
     {
-      name: "dev",
+      id: "xyz",
+      vpc_name: "dev",
       cidr: "20.0.0.5/24",
       gateway: "11.0.0.1",
     },
   ];
-  vpcs = vpcs.filter((vpc) => vpc.name !== "Default");
+  vpcs = vpcs.filter((vpc) => vpc.vpc_name !== "Default");
 
   return (
     <div className="m-2 md:m-6 space-y-2 md:space-y-4">
@@ -75,7 +79,7 @@ function VpcPage() {
             </TableRow>
             {vpcs.map((vpc) => (
               <TableRow key={vpc.cidr}>
-                <TableCell className="font-medium">{vpc.name}</TableCell>
+                <TableCell className="font-medium">{vpc.vpc_name}</TableCell>
                 <TableCell>{vpc.cidr}</TableCell>
                 <TableCell>{vpc.gateway}</TableCell>
                 <TableCell className="text-right flex gap-4 justify-end">
@@ -89,7 +93,7 @@ function VpcPage() {
                           Are you absolutely sure?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          This will delete VPC {"' " + vpc.name + " '"}
+                          This will delete VPC {"' " + vpc.vpc_name + " '"}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -100,7 +104,7 @@ function VpcPage() {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  <EditVpc VpcName={vpc.name} />
+                  <EditVpc VpcName={vpc.vpc_name} vpc_id={vpc.id} />
                 </TableCell>
               </TableRow>
             ))}

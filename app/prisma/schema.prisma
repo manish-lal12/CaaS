@@ -89,17 +89,19 @@ model Authenticator {
 
 // MODELS FOR APP ////////////////////////////////////////////////////////////////////////////
 model vpc {
-  id         String       @id
-  vpc_name   String
-  node       String
-  network    String
-  cidr       String // @unique
-  gateway    String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  containers containers[]
-  User       User         @relation(fields: [userId], references: [id])
-  userId     String
+  id              String        @id
+  vpc_name        String
+  node            String
+  network         String
+  cidr            String // @unique
+  gateway         String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  containers      containers[]
+  User            User          @relation(fields: [userId], references: [id])
+  userId          String
+  available_vpc   available_vpc @relation(fields: [available_vpcId], references: [id], onDelete: Cascade)
+  available_vpcId String        @unique
 }
 
 enum CONTAINER_STATE {
@@ -116,11 +118,11 @@ model containers {
   state         CONTAINER_STATE
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  vpc           vpc             @relation(fields: [vpcId], references: [id])
+  vpc           vpc             @relation(fields: [vpcId], references: [id], onDelete: Cascade)
   vpcId         String
   ip_address    String
   inbound_rules inbound_rules[]
-  User          User            @relation(fields: [userId], references: [id])
+  User          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
 }
 
@@ -128,15 +130,15 @@ model inbound_rules {
   id               String     @id @default(cuid())
   node             String
   rule_name        String // it is config_name in nginx infra. backend
-  domain_name      String
+  domain_name      String     @unique
   service_protocol String
   container_ip     String
   port             Int
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
-  User             User       @relation(fields: [userId], references: [id])
+  User             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           String
-  containers       containers @relation(fields: [containersName], references: [name])
+  containers       containers @relation(fields: [containersName], references: [name], onDelete: Cascade)
   containersName   String
 }
 
@@ -147,4 +149,5 @@ model available_vpc {
   network String
   gateway String
   used    Boolean
+  vpc     vpc?
 }

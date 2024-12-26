@@ -90,12 +90,12 @@ export function CreateContainer() {
               </Label>
               <Controller
                 control={control}
-                name="vpc"
-                render={({ field: { onChange, onBlur, value, ref } }) => (
+                name="vpc_id"
+                render={() => (
                   <Select
                     onValueChange={(e) => {
-                      setValue("vpc", e);
-                      clearErrors("vpc");
+                      setValue("vpc_id", e);
+                      clearErrors("vpc_id");
                     }}
                     defaultValue={defaultVPCID}
                   >
