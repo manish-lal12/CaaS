@@ -3,12 +3,16 @@ import { Button } from "@/components/ui/button";
 import "./welcome.css";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { initializeUser } from "../actions/infra";
+
 function UsernameInput() {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   async function HandleSubmit() {
     setLoading(true);
-    // submit code
+    await initializeUser({
+      username: username,
+    });
     setLoading(false);
   }
   return (

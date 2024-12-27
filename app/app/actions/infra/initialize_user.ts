@@ -1,11 +1,13 @@
 "use server";
+import { auth } from "@/auth";
 import prisma from "@/lib/db";
 import { DEFAULT_VPC_NAME, INFRA_BE_URL } from "@/lib/vars";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 export async function initializeUser({ username }: { username: string }) {
-  const userEmail = "abc@gmail.com";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   const vpcID = uuid();
   try {
     const user = await prisma.user.findUnique({
@@ -35,7 +37,7 @@ export async function initializeUser({ username }: { username: string }) {
       },
     });
 
-    const createNetworkResponse = await axios.post(INFRA_BE_URL, {
+    const createNetworkResponse = await axios.post(INFRA_BE_URL + "/network", {
       network_name: vpcID,
       network_subnet: availableVPC?.cidr,
       network_gateway: availableVPC?.gateway,
@@ -48,14 +50,6 @@ export async function initializeUser({ username }: { username: string }) {
     }
 
     await prisma.$transaction(async (tx) => {
-      await tx.available_vpc.update({
-        where: {
-          id: availableVPC?.id,
-        },
-        data: {
-          used: true,
-        },
-      });
       await tx.vpc.create({
         data: {
           id: vpcID,
@@ -66,6 +60,14 @@ export async function initializeUser({ username }: { username: string }) {
           gateway: availableVPC?.gateway as string,
           userId: userID,
           available_vpcId: availableVPC?.id as string,
+        },
+      });
+      await tx.available_vpc.update({
+        where: {
+          id: availableVPC?.id,
+        },
+        data: {
+          used: true,
         },
       });
     });
