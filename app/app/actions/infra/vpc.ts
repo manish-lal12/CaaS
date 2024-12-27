@@ -5,9 +5,11 @@ import { v4 as uuid } from "uuid";
 import { add_vpc_schema, edit_vpc_schema } from "@/lib/zod";
 import { DEFAULT_VPC_NAME, INFRA_BE_URL } from "@/lib/vars";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export async function createVPC({ vpc_name }: { vpc_name: string }) {
-  const userEmail = "abc@gmail.com";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   try {
     //validation
     const validation = add_vpc_schema.safeParse({
@@ -27,12 +29,12 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
       },
     });
     const networkID = uuid();
-    const createVPCResponse = await axios.post(INFRA_BE_URL, {
+    const createVPCResponse = await axios.post(INFRA_BE_URL + "/network", {
       network_name: networkID,
       network_subnet: availableVPC?.cidr,
       network_gateway: availableVPC?.gateway,
     });
-    if (createVPCResponse.data !== 0) {
+    if (createVPCResponse.data.return_code !== 0) {
       return {
         success: false,
         message: "Error, failed to create VPC",
@@ -130,7 +132,8 @@ export async function editVPC({
 }
 
 export async function deleteVPC({ vpc_id }: { vpc_id: string }) {
-  const userEmail = "xyz";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -165,12 +168,14 @@ export async function deleteVPC({ vpc_id }: { vpc_id: string }) {
         message: "Default VPC cannot be deleted",
       };
     }
-    const deleteVPCResponse = await axios.post(INFRA_BE_URL, {
-      network_name: vpc?.id,
-      network_subnet: vpc?.cidr,
-      network_gateway: vpc?.gateway,
+    const deleteVPCResponse = await axios.delete(INFRA_BE_URL + "/network", {
+      data: {
+        network_name: vpc?.id,
+        network_subnet: vpc?.cidr,
+        network_gateway: vpc?.gateway,
+      },
     });
-    if (deleteVPCResponse.data !== 0) {
+    if (deleteVPCResponse.data.return_code !== 0) {
       return {
         success: false,
         message: "Error, Failed to delete VPC",

@@ -38,6 +38,7 @@ function AddVpc() {
       vpc_name: formData.name,
     });
     if (res.success) {
+      alert("VPC created successfully, You can close the dialog box");
       router.refresh();
     } else {
       setError(res.message);

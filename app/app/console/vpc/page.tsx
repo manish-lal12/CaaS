@@ -21,36 +21,30 @@ import {
 import AddVpc from "./AddVpc";
 import EditVpc from "./EditVpc";
 import VPCDeleteButton from "./action";
+import { auth } from "@/auth";
+import prisma from "@/lib/db";
 
-function VpcPage() {
-  let vpcs = [
-    {
-      id: "xyz",
-      vpc_name: "Default",
-      cidr: "11.0.0.0/24",
-      gateway: "11.0.0.1",
+async function VpcPage() {
+  const session = await auth();
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string,
     },
-    {
-      id: "xyz",
-      vpc_name: "extra",
-      cidr: "12.0.0.1/24",
-      gateway: "11.0.0.1",
+    include: {
+      vpc: {
+        select: {
+          id: true,
+          vpc_name: true,
+          cidr: true,
+          gateway: true,
+        },
+      },
     },
-    {
-      id: "xyz",
-      vpc_name: "test",
-      cidr: "15.2.2.5/24",
-      gateway: "11.0.0.1",
-    },
-    {
-      id: "xyz",
-      vpc_name: "dev",
-      cidr: "20.0.0.5/24",
-      gateway: "11.0.0.1",
-    },
-  ];
+  });
+
+  let vpcs = user?.vpc || [];
   vpcs = vpcs.filter((vpc) => vpc.vpc_name !== "Default");
-
+  const defaultVPC = user?.vpc.find((vpc) => vpc.vpc_name === "Default");
   return (
     <div className="m-2 md:m-6 space-y-2 md:space-y-4">
       <div className="flex justify-between items-center">
@@ -70,8 +64,8 @@ function VpcPage() {
           <TableBody>
             <TableRow>
               <TableCell className="font-medium">Default</TableCell>
-              <TableCell>{"10.1.2.10/24"}</TableCell>
-              <TableCell>{"10.1.2.10"}</TableCell>
+              <TableCell>{defaultVPC?.cidr}</TableCell>
+              <TableCell>{defaultVPC?.gateway}</TableCell>
               <TableCell className="text-right flex gap-4 justify-end">
                 <Trash2 className="text-red-500/20 " />
                 <Edit className="dark:text-white/20 text-black/20" />
