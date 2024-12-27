@@ -4,16 +4,23 @@ import "./welcome.css";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { initializeUser } from "../actions/infra";
+import { useRouter } from "next/navigation";
 
 function UsernameInput() {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
+  const router = useRouter();
   async function HandleSubmit() {
     setLoading(true);
-    await initializeUser({
+    const res = await initializeUser({
       username: username,
     });
-    setLoading(false);
+    if (!res.success) {
+      alert(res.message);
+      setLoading(false);
+      return;
+    }
+    router.push("/console");
   }
   return (
     <>

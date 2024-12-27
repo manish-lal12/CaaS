@@ -42,7 +42,7 @@ export async function initializeUser({ username }: { username: string }) {
       network_subnet: availableVPC?.cidr,
       network_gateway: availableVPC?.gateway,
     });
-    if (createNetworkResponse.data !== 0) {
+    if (createNetworkResponse.data.return_code !== 0) {
       return {
         success: false,
         message: "error, failed to create network",
