@@ -89,7 +89,8 @@ export async function editVPC({
   vpc_name: string;
   vpc_id: string;
 }) {
-  const userEmail = "xyz";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   try {
     const validation = edit_vpc_schema.safeParse({
       name: vpc_name,

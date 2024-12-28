@@ -18,12 +18,14 @@ import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 function AddVpc() {
   type Schema = z.infer<typeof add_vpc_schema>;
   const {
     register,
+    reset,
     handleSubmit,
     formState: { isSubmitting, errors, isValid },
   } = useForm<Schema>({
@@ -38,7 +40,8 @@ function AddVpc() {
       vpc_name: formData.name,
     });
     if (res.success) {
-      alert("VPC created successfully, You can close the dialog box");
+      toast.success("VPC created successfully, You can close the dialog box");
+      reset();
       router.refresh();
     } else {
       setError(res.message);

@@ -20,6 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import SideBarLinks from "../SideBarLinks";
+import { LogoutButton } from "../LoginLogoutButton";
 
 function NavBar() {
   const { setTheme, theme } = useTheme();
@@ -89,7 +90,10 @@ function NavBar() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <div className="text-[28px] font-bold">Menu</div>
+              <div className="flex justify-between">
+                <div className="text-[28px] font-bold">Menu</div>
+                <LogoutButton />
+              </div>
               <Link
                 href={"/docs"}
                 className="text-lg text-blue-500 hover:text-blue-800 underline-offset-2 hover:underline"
