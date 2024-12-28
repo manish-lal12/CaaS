@@ -11,14 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SideBarLinks from "../SideBarLinks";
 import { LogoutButton } from "../LoginLogoutButton";
 
@@ -37,9 +30,9 @@ function NavBar() {
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image
             src={`https://static.aaraz.me/caas/logo_${themeValue}.svg`}
-            className="w-16"
-            height={100}
-            width={100}
+            className="w-16 h-12"
+            height={1}
+            width={1}
             alt="caas"
           />
         </a>

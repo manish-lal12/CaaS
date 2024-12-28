@@ -90,7 +90,7 @@ async function VpcPage() {
                           This will delete VPC {"' " + vpc.vpc_name + " '"}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
-                      <AlertDialogFooter className="flex items-center">
+                      <AlertDialogFooter className="flex flex-row justify-center gap-2 items-baseline">
                         <VPCDeleteButton vpc_id={vpc.id} />
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                       </AlertDialogFooter>

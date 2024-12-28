@@ -1,4 +1,4 @@
-import * as React from "react";
+"use client";
 import {
   Table,
   TableBody,
@@ -19,6 +19,9 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import ContainerStatusBadge from "@/components/ContainerStatusBadge";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { DEFAULT_VPC_NAME } from "@/lib/vars";
 
 export function ConsoleOptions() {
   return (
@@ -82,32 +85,69 @@ export function ConsoleOptions() {
     </div>
   );
 }
-const container = [
-  {
-    container_name: "INV001",
-    container_nick_name: "INV001_INV001",
-    container_ip: "11.0.0.1",
-  },
-];
 
-export function ConsoleContainers() {
+export function ConsoleContainers({
+  vpcs,
+}: {
+  vpcs:
+    | {
+        vpc_name: string;
+        id: string;
+      }[]
+    | undefined;
+}) {
+  const [vpc, setVpc] = useState(() => {
+    return vpcs?.filter((vpc) => vpc.vpc_name === DEFAULT_VPC_NAME)[0]?.id;
+  });
+  const [vpcFetchLoading, setVpcFetchLoading] = useState(false);
+  const [container, setContainer] = useState<
+    {
+      container_name: string;
+      container_nick_name: string;
+      container_ip: string;
+    }[]
+  >([]);
+  const DefaultVPCID = vpcs?.filter(
+    (vpc) => vpc.vpc_name === DEFAULT_VPC_NAME
+  )[0]?.id;
+  useEffect(() => {
+    async function getContainers() {
+      setVpcFetchLoading(true);
+      if (vpc) {
+        const res = await fetch(`/api/v1/app/containers?vpc_id=${vpc}`);
+        const data = await res.json();
+        setContainer(data);
+      }
+      setVpcFetchLoading(false);
+    }
+    getContainers();
+  }, [vpc]);
   return (
     <div className="rounded-xl border-2">
       <div className="text-xl border-b-2 ">
         <div className="text-xl md:text-2xl font-bold p-2">Container</div>
         <div className="p-2 flex gap-2 items-center pb-4">
           <div>VPC</div>
-          <Select defaultValue="default">
+          <Select
+            defaultValue={DefaultVPCID}
+            onValueChange={(e) => {
+              setVpc(e);
+            }}
+          >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a fruit" />
+              <SelectValue placeholder="Select a Vpc" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="default">Default</SelectItem>
-                <SelectItem value="dev">Dev</SelectItem>
+                {vpcs?.map((vpc) => (
+                  <SelectItem key={vpc.id} value={vpc.id}>
+                    {vpc.vpc_name}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
+          {vpcFetchLoading && <Loader2 className="w-6 h-6 animate-spin" />}
         </div>
       </div>
       <div className="md:h-[600px] max-h-[300px] md:max-h-[600px] overflow-auto">
