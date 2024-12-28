@@ -8,7 +8,9 @@ function ContainerStatusBadge({ container_name }: { container_name: string }) {
   const [status, setStatus] = useState("fetching");
   useEffect(() => {
     axios
-      .get(`/metrics/container/${container_name}/status`)
+      .get(
+        `http://localhost:4000/metrics/container/status?container_id=${container_name}`
+      )
       .then((res) => {
         setStatus(() => {
           return res.data.status === "running" ? "running" : "stopped";
@@ -22,7 +24,7 @@ function ContainerStatusBadge({ container_name }: { container_name: string }) {
     <Loader2 className="animate-spin text-right" />
   ) : (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Badge variant={status as any}>stopped</Badge>
+    <Badge variant={status as any}>{status}</Badge>
   );
 }
 

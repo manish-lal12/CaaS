@@ -23,7 +23,19 @@ export async function GET(request: NextRequest) {
       name: true,
       nick_name: true,
       ip_address: true,
+      node: true,
+      createdAt: true,
     },
   });
-  return Response.json(containers);
+  return Response.json(
+    containers.map((container) => {
+      return {
+        container_name: container.name,
+        container_nick_name: container.nick_name,
+        container_ip: container.ip_address,
+        node: container.node,
+        created_at: container.createdAt,
+      };
+    })
+  );
 }

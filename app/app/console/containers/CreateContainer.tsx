@@ -25,8 +25,15 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { createContainer } from "@/app/actions/infra";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DEFAULT_VPC_NAME } from "@/lib/vars";
 
-export function CreateContainer() {
+export function CreateContainer({
+  vpcs,
+}: {
+  vpcs: { id: string; vpc_name: string }[];
+}) {
   const router = useRouter();
   type ContainerCreationSchema = z.infer<typeof container_create_schema>;
   const {
@@ -35,26 +42,20 @@ export function CreateContainer() {
     clearErrors,
     setValue,
     control,
+    reset,
     formState: { isSubmitting, isValid, errors },
   } = useForm<ContainerCreationSchema>({
+    resolver: zodResolver(container_create_schema),
     mode: "onChange",
+    defaultValues: {
+      vpc_id: vpcs.filter((item) => item.vpc_name === DEFAULT_VPC_NAME)[0].id,
+    },
   });
 
-  const UserVPCs = [
-    {
-      name: "Default",
-      id: "1000",
-    },
-    {
-      name: "vpc2",
-      id: "1001",
-    },
-    {
-      name: "vpc3",
-      id: "1002",
-    },
-  ];
-  const defaultVPCID = UserVPCs.filter((item) => item.name === "Default")[0].id;
+  const UserVPCs = vpcs;
+  const defaultVPCID = UserVPCs.filter(
+    (item) => item.vpc_name === DEFAULT_VPC_NAME
+  )[0].id;
 
   const onSubmit: SubmitHandler<ContainerCreationSchema> = async (FormData) => {
     const res = await createContainer({
@@ -62,8 +63,12 @@ export function CreateContainer() {
       vpc_id: FormData.vpc_id,
     });
     if (res.success) {
+      toast.success("Container created successfully");
+      reset();
       router.refresh();
     } else {
+      console.log(res.message);
+      toast.error("Failed to create container, Try again");
       alert("Failed to create container, Try again");
     }
   };
@@ -73,7 +78,7 @@ export function CreateContainer() {
       <DialogTrigger asChild>
         <Button size={"sm"}>Add Container</Button>
       </DialogTrigger>
-      <DialogContent className="w-fit">
+      <DialogContent className="w-full md:w-fit">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Create Container</DialogTitle>
@@ -81,13 +86,13 @@ export function CreateContainer() {
               Enter Details required or create a new container
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid md:gap-4 gap-2 md:py-4 py-1">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-nowrap text-base">
+              <Label htmlFor="name" className="md:text-base text-sm">
                 Container Name <span className="text-red-600">*</span>
               </Label>
-              <div className="col-span-3">
-                <Input id="name" {...register("container_name")} />
+              <div className="col-span-3 space-y-2">
+                <Input {...register("container_name")} />
                 {errors.container_name && (
                   <div className="text-sm text-red-600">
                     {errors.container_name.message}
@@ -96,7 +101,7 @@ export function CreateContainer() {
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="vpc" className="text-nowrap text-base">
+              <Label htmlFor="vpc" className="text-nowrap md:text-base text-sm">
                 VPC
               </Label>
               <Controller
@@ -117,7 +122,7 @@ export function CreateContainer() {
                       <SelectGroup id="vpc">
                         {UserVPCs.map((item) => (
                           <SelectItem key={item.id} value={item.id}>
-                            {item.name}
+                            {item.vpc_name}
                           </SelectItem>
                         ))}
                       </SelectGroup>

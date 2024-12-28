@@ -72,9 +72,8 @@ def CreateContainer(ContainerData: ContainerData) -> ContainerReturnData:
         try:
             container_ip = event["event_data"]["res"]["container"]["NetworkSettings"][
                 "Networks"
-            ]["loc"]["IPAddress"]
+            ][ContainerData.network]["IPAddress"]
         except:
-            # print("IPNotFound")
             pass
     ReturnData = ContainerReturnData(container_ip=container_ip, return_code=res.rc)
     return ReturnData

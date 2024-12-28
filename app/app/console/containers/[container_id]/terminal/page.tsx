@@ -1,11 +1,26 @@
 import { Separator } from "@/components/ui/separator";
+import prisma from "@/lib/db";
 import dynamic from "next/dynamic";
 
 const TerminalComponent = dynamic(() => import("./terminal"), {
   ssr: false,
 });
 
-function Terminal() {
+async function Terminal({
+  params,
+}: {
+  params: {
+    container_id: string;
+  };
+}) {
+  const container = await prisma.containers.findUnique({
+    where: {
+      name: params.container_id,
+    },
+    include: {
+      vpc: true,
+    },
+  });
   return (
     <div>
       <div className="overflow-hidden rounded-sm">
@@ -13,11 +28,11 @@ function Terminal() {
       </div>
       <div className="text-xl p-2 space-y-4 ">
         <Separator />
-        <div>VPC - 11.0.0.0/24</div>
+        <div>VPC - {container?.vpc.vpc_name}</div>
         <Separator />
-        <div>Container Nick Name - andromeda</div>
+        <div>Container Nick Name - {container?.nick_name}</div>
         <Separator />
-        <div>Internal IP - 11.0.0.5</div>
+        <div>Internal IP - {container?.ip_address}</div>
         <Separator />
       </div>
     </div>

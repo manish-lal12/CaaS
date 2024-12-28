@@ -20,7 +20,7 @@ export function MemoryUsesChart() {
   useEffect(() => {
     const asyncFetch = async () => {
       const response = await fetch(
-        `http://localhost:4000?container_id=${container_id}`
+        `http://localhost:4000/metrics/container/stats?container_id=${container_id}`
       );
       if (!response.body) {
         console.error("No response body");
@@ -74,7 +74,7 @@ export function MemoryUsesChart() {
   }, [ramUses]);
 
   return (
-    <Card className="w-full md:w-1/3">
+    <Card className="w-full ">
       <CardHeader>
         <CardTitle>RAM Used</CardTitle>
       </CardHeader>

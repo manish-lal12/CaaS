@@ -22,6 +22,7 @@ import ContainerStatusBadge from "@/components/ContainerStatusBadge";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_VPC_NAME } from "@/lib/vars";
+import axios from "axios";
 
 export function ConsoleOptions() {
   return (
@@ -114,13 +115,15 @@ export function ConsoleContainers({
     async function getContainers() {
       setVpcFetchLoading(true);
       if (vpc) {
-        const res = await fetch(`/api/v1/app/containers?vpc_id=${vpc}`);
-        const data = await res.json();
+        const res = await axios.get(`/api/v1/app/containers?vpc_id=${vpc}`);
+        const data = res.data;
         setContainer(data);
       }
       setVpcFetchLoading(false);
     }
-    getContainers();
+    getContainers().then(() => {
+      console.log("Containers fetched");
+    });
   }, [vpc]);
   return (
     <div className="rounded-xl border-2">

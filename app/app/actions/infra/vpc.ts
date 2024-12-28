@@ -104,15 +104,12 @@ export async function editVPC({
           .join(", ")}`,
       };
     }
-    const user = await prisma.user.findUnique({
-      where: {
-        email: userEmail,
-      },
-    });
     await prisma.vpc.update({
       where: {
         id: vpc_id,
-        userId: user?.id as string,
+        User: {
+          email: userEmail,
+        },
       },
       data: {
         vpc_name: vpc_name,
@@ -136,15 +133,12 @@ export async function deleteVPC({ vpc_id }: { vpc_id: string }) {
   const session = await auth();
   const userEmail = session?.user?.email as string;
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: userEmail,
-      },
-    });
     const vpc = await prisma.vpc.findFirst({
       where: {
         id: vpc_id,
-        userId: user?.id as string,
+        User: {
+          email: userEmail,
+        },
       },
       include: {
         containers: true,
