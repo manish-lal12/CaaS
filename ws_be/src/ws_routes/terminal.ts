@@ -1,8 +1,8 @@
-import { WebSocket } from "ws";
-import { Request } from "express";
-import { docker } from "./lib/Docker";
+import { WebSocketServer } from "ws";
+import { docker } from "../lib/Docker";
 
-export async function attachTerminal(ws: WebSocket, req: Request) {
+export const terminal_wss = new WebSocketServer({ noServer: true });
+terminal_wss.on("connection", async (ws, req) => {
   const CONTAINER_ID = req.url?.split("=")[1];
   try {
     const container = docker.getContainer(CONTAINER_ID as string);
@@ -31,4 +31,4 @@ export async function attachTerminal(ws: WebSocket, req: Request) {
     console.log(error);
     ws.close();
   }
-}
+});

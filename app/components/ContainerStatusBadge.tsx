@@ -9,11 +9,11 @@ function ContainerStatusBadge({ container_name }: { container_name: string }) {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4000/metrics/container/status?container_id=${container_name}`
+        `http://localhost:5000/metrics/container/status?container_id=${container_name}`
       )
       .then((res) => {
         setStatus(() => {
-          return res.data.status === "running" ? "running" : "stopped";
+          return res.data.state === true ? "running" : "stopped";
         });
       })
       .catch(() => {

@@ -16,7 +16,7 @@ function TermComp() {
     let ws: WebSocket;
     if (termRef.current) {
       ws = new WebSocket(
-        `http://localhost:4000/terminal/container/?container_id=${container_id}`
+        `http://localhost:5000/terminal?container_id=${container_id}`
       );
       term.open(termRef.current);
       const attachAddon = new AttachAddon(ws);

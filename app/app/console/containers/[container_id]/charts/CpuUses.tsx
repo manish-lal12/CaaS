@@ -10,13 +10,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-// const chartConfig = {
-//   mobile: {
-//     label: "Mobile",
-//     color: "hsl(var(--chart-4))",
-//   },
-// } satisfies ChartConfig;
-
 type cpuUsesData = {
   CpuUsesPercent: number;
 }[];
@@ -26,7 +19,7 @@ export function CpuUsesChart() {
   const [cpuUses, setCpuUses] = useState<cpuUsesData>([]);
   useEffect(() => {
     const ws = new WebSocket(
-      `http://localhost:4000/metrics/container/?container_id=${container_id}`
+      `http://localhost:5000/metrics/container/?container_id=${container_id}`
     );
     ws.onmessage = (event) => {
       try {

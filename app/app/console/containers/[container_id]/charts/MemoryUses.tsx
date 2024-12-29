@@ -19,7 +19,7 @@ export function MemoryUsesChart() {
   const [ramUses, setRamUses] = useState<ramUsesData>([]);
   useEffect(() => {
     const ws = new WebSocket(
-      `http://localhost:4000/metrics/container/?container_id=${container_id}`
+      `http://localhost:5000/metrics/container/?container_id=${container_id}`
     );
 
     ws.onmessage = (event) => {

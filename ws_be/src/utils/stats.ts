@@ -33,7 +33,6 @@ export const calculateStats = (chunk: Buffer) => {
     cpu_usage_percentage,
     memory_usage,
   };
-  console.log(allStats);
 
   return allStats;
 };
