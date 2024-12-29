@@ -20,6 +20,7 @@ from type import (
     ContainerActionsReturnData,
 )
 
+
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -27,38 +28,38 @@ app = FastAPI()
 
 @app.post("/container")
 async def create_container(container: ContainerData) -> ContainerReturnData:
-    return CreateContainer(container)
+    return await CreateContainer(container)
 
 
 @app.post("/container_actions")
 async def ContainerActions(data: ContainerActions) -> ContainerActionsReturnData:
-    return ActionsContainer(data)
+    return await ActionsContainer(data)
 
 
 @app.delete("/container")
 async def delete_container(container: ContainerData) -> ContainerReturnData:
-    return DeleteContainer(container)
+    return await DeleteContainer(container)
 
 
 @app.post("/network")
 async def create_network(network: DockerNetworkData) -> DockerNetworkReturnData:
-    return CreateDockerNetwork(network)
+    return await CreateDockerNetwork(network)
 
 
 @app.delete("/network")
 async def delete_network(network: DockerNetworkData) -> DockerNetworkReturnData:
-    return DeleteDockerNetwork(network)
+    return await DeleteDockerNetwork(network)
 
 
 @app.post("/nginx")
 async def create_nginx_config(
     nginx: CreateNginxConfigData,
 ) -> CreateNginxConfigReturnData:
-    return CreateNginxConfig(nginx)
+    return await CreateNginxConfig(nginx)
 
 
 @app.delete("/nginx")
 async def delete_nginx_config(
     nginx: DeleteNginxConfigData,
 ) -> DeleteNginxConfigReturnData:
-    return DeleteNginxConfig(nginx)
+    return await DeleteNginxConfig(nginx)
