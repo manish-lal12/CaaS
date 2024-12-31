@@ -10,6 +10,10 @@ from type import (
     DeleteNginxConfigReturnData,
     ContainerActions,
     ContainerActionsReturnData,
+    CreateSSHTunnelData,
+    CreateSSHTunnelReturnData,
+    DeleteSSHTunnelData,
+    DeleteSSHTunnelReturnData,
 )
 import threading
 from typing import Tuple
@@ -122,4 +126,39 @@ async def ActionsContainer(data: ContainerActions) -> ContainerActionsReturnData
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, res_async[0].join)
     ReturnData = ContainerActionsReturnData(return_code=res.rc)
+    return ReturnData
+
+
+########################################## SSH ###############################################
+async def CreateSSHTunnel(data: CreateSSHTunnelData) -> CreateSSHTunnelReturnData:
+    res_async: Tuple[threading.Thread, Runner] = run_async(
+        private_data_dir=".",
+        playbook="ssh/start_ssh_tunnel.yaml",
+        extravars=data.model_dump(),
+    )
+    res = res_async[1]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, res_async[0].join)
+    tunnel_pid = ""
+    for event in res.events:
+        try:
+            tunnel_pid = event["event_data"]["res"]["stdout"]
+        except:
+            pass
+    ReturnData = CreateSSHTunnelReturnData(
+        return_code=res.rc, ssh_tunnel_pid=tunnel_pid
+    )
+    return ReturnData
+
+
+async def DeleteSSHTunnel(data: DeleteSSHTunnelData) -> DeleteSSHTunnelReturnData:
+    res_async: Tuple[threading.Thread, Runner] = run_async(
+        private_data_dir=".",
+        playbook="ssh/stop_ssh_tunnel.yaml",
+        extravars=data.model_dump(),
+    )
+    res = res_async[1]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, res_async[0].join)
+    ReturnData = DeleteSSHTunnelReturnData(return_code=res.rc)
     return ReturnData

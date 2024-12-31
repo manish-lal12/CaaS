@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 
-function EditVpc({ VpcName, vpc_id }: { VpcName: string; vpc_id: string }) {
+function EditVpc({ vpc_id }: { vpc_id: string }) {
   const router = useRouter();
   type EditVPCSchema = z.infer<typeof edit_vpc_schema>;
   const {

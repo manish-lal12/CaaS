@@ -94,6 +94,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     // Initialize ResizeObserver
     const resizeObserver = new ResizeObserver((entries) => {
       // For all entries, recalculate the path
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
       for (let entry of entries) {
         updatePath();
       }

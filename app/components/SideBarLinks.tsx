@@ -1,11 +1,11 @@
 "use client";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion@sidebar";
+// import {
+//   Accordion,
+//   AccordionContent,
+//   AccordionItem,
+//   AccordionTrigger,
+// } from "@/components/ui/accordion@sidebar";
 import { CircleUserRoundIcon, Box, Network } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

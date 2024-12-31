@@ -1,0 +1,13 @@
+- name: Create ssh tunnel
+  hosts: localhost
+  tasks:
+    - name: Check ssh tunnel
+      ansible.builtin.shell: >
+        pgrep -f "ssh -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ node_internal_ip }}:{{ node_port }}"
+      register: check_tunnel
+      failed_when: false # Ignore failure if no tunnel is found
+    - name: Create SSH tunnel if not already running
+      ansible.builtin.shell: >
+        ssh -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ node_internal_ip }}:{{ node_port }} {{ node_name }} &&
+        pgrep -f "ssh -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ node_internal_ip }}:{{ node_port }}"
+      when: check_tunnel.stdout == ""

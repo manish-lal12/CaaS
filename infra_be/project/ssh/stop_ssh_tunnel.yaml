@@ -1,0 +1,5 @@
+- name: Stop ssh tunnel
+  hosts: localhost
+  tasks:
+    - name: Stop ssh tunnel
+      ansible.builtin.shell: kill -9 {{ ssh_tunnel_pid }}
