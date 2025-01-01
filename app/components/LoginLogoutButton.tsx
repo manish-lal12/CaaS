@@ -25,6 +25,7 @@ export function LogoutButton() {
         });
       }}
       variant={"destructive"}
+      size={"sm"}
     >
       Logout <LogOutIcon className="h-4" />
     </Button>

@@ -59,7 +59,7 @@ class DeleteNginxConfigReturnData(BaseModel):
     return_code: int
 
 
-########################################## Nginx Config ############################################
+########################################## SSH ############################################
 class CreateSSHTunnelData(BaseModel):
     ssh_proxy_port: int
     node_internal_ip: str
@@ -77,4 +77,34 @@ class DeleteSSHTunnelData(BaseModel):
 
 
 class DeleteSSHTunnelReturnData(BaseModel):
+    return_code: int
+
+
+class AuthorizedKeysData(BaseModel):
+    user_id: str
+    ssh_public_key: str
+    ssh_key_name: str
+
+
+class AuthorizedKeysReturnData(BaseModel):
+    return_code: int
+
+
+class DeleteAuthorizedKeysData(BaseModel):
+    user_id: str
+    ssh_key_name: str
+
+
+class DeleteAuthorizedKeysReturnData(BaseModel):
+    return_code: int
+
+
+########################################## user ############################################
+
+
+class InitUserData(BaseModel):
+    user_id: str
+
+
+class InitUserReturnData(BaseModel):
     return_code: int

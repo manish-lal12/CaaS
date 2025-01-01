@@ -6,6 +6,11 @@ from InfrastructureFunctions import (
     CreateNginxConfig,
     DeleteNginxConfig,
     ActionsContainer,
+    CreateSSHTunnel,
+    CreateSSHAuthorizedKeysFile,
+    DeleteSSHTunnel,
+    InitUser,
+    DeleteSSHAuthorizedKeysFile,
 )
 from type import (
     ContainerData,
@@ -18,6 +23,16 @@ from type import (
     DockerNetworkReturnData,
     ContainerActions,
     ContainerActionsReturnData,
+    AuthorizedKeysData,
+    AuthorizedKeysReturnData,
+    CreateSSHTunnelData,
+    CreateSSHTunnelReturnData,
+    DeleteSSHTunnelData,
+    DeleteSSHTunnelReturnData,
+    DeleteAuthorizedKeysData,
+    DeleteAuthorizedKeysReturnData,
+    InitUserData,
+    InitUserReturnData,
 )
 
 
@@ -63,3 +78,32 @@ async def delete_nginx_config(
     nginx: DeleteNginxConfigData,
 ) -> DeleteNginxConfigReturnData:
     return await DeleteNginxConfig(nginx)
+
+
+@app.post("/sshtunnel")
+async def create_sshtunnel(sshtunnel: CreateSSHTunnelData) -> CreateSSHTunnelReturnData:
+    return await CreateSSHTunnel(sshtunnel)
+
+
+@app.delete("/sshtunnel")
+async def delete_sshtunnel(sshtunnel: DeleteSSHTunnelData) -> DeleteSSHTunnelReturnData:
+    return await DeleteSSHTunnel(sshtunnel)
+
+
+@app.post("/authorized_keys")
+async def create_authorized_keys(
+    authorized_keys: AuthorizedKeysData,
+) -> AuthorizedKeysReturnData:
+    return await CreateSSHAuthorizedKeysFile(authorized_keys)
+
+
+@app.delete("/authorized_keys")
+async def delete_authorized_keys(
+    authorized_keys: DeleteAuthorizedKeysData,
+) -> DeleteAuthorizedKeysReturnData:
+    return await DeleteSSHAuthorizedKeysFile(authorized_keys)
+
+
+@app.post("/init_user")
+async def init_user(user: InitUserData) -> InitUserReturnData:
+    return await InitUser(user)

@@ -1,0 +1,9 @@
+- name: Ssh keys folder
+  hosts: vm
+  tasks:
+    - name: Create directory for ssh keys
+      ansible.builtin.file:
+        path: /home/anish/caas/ssh_keys/{{ user_id }}
+        state: directory
+        mode: "0755"
+        owner: root

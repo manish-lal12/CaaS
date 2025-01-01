@@ -14,6 +14,12 @@ from type import (
     CreateSSHTunnelReturnData,
     DeleteSSHTunnelData,
     DeleteSSHTunnelReturnData,
+    AuthorizedKeysData,
+    AuthorizedKeysReturnData,
+    InitUserData,
+    InitUserReturnData,
+    DeleteAuthorizedKeysData,
+    DeleteAuthorizedKeysReturnData,
 )
 import threading
 from typing import Tuple
@@ -161,4 +167,52 @@ async def DeleteSSHTunnel(data: DeleteSSHTunnelData) -> DeleteSSHTunnelReturnDat
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, res_async[0].join)
     ReturnData = DeleteSSHTunnelReturnData(return_code=res.rc)
+    return ReturnData
+
+
+async def CreateSSHAuthorizedKeysFile(
+    data: AuthorizedKeysData,
+) -> AuthorizedKeysReturnData:
+    res_async: Tuple[threading.Thread, Runner] = run_async(
+        private_data_dir=".",
+        playbook="ssh/create_ssh_authorized_key_file.yaml",
+        extravars=data.model_dump(),
+    )
+    res = res_async[1]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, res_async[0].join)
+    ReturnData = AuthorizedKeysReturnData(return_code=res.rc)
+    return ReturnData
+
+
+async def DeleteSSHAuthorizedKeysFile(
+    data: DeleteAuthorizedKeysData,
+) -> DeleteAuthorizedKeysReturnData:
+    res_async: Tuple[threading.Thread, Runner] = run_async(
+        private_data_dir=".",
+        playbook="ssh/delete_ssh_authorized_key_file.yaml",
+        extravars=data.model_dump(),
+    )
+    res = res_async[1]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, res_async[0].join)
+    ReturnData = DeleteAuthorizedKeysReturnData(return_code=res.rc)
+    return ReturnData
+
+
+########################################## user ###############################################
+
+
+async def InitUser(
+    data: InitUserData,
+) -> InitUserReturnData:
+    res_async: Tuple[threading.Thread, Runner] = run_async(
+        private_data_dir=".",
+        playbook="init_user.yaml",
+        extravars=data.model_dump(),
+    )
+    res = res_async[1]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, res_async[0].join)
+    ReturnData = InitUserReturnData(return_code=res.rc)
     return ReturnData

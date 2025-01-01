@@ -196,6 +196,7 @@ model available_ssh_proxy_ports {
 
 model ssh_keys {
   id          String       @id @default(cuid())
+  nick_name   String
   public_key  String
   private_key String
   createdAt   DateTime     @default(now())
