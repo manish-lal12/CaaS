@@ -161,18 +161,31 @@ export async function deleteContainer({
       INFRA_BE_URL + "/container",
       {
         data: {
-          container_name,
-          image: container?.image,
-          tag: container?.tag,
-          network: container.vpcId,
-          storage: "3G",
+          container_name: container_name,
         },
       }
     );
+
     if (deleteContainerResponse.data.return_code !== 0) {
       return {
         success: false,
         message: "failed to delete container",
+      };
+    }
+
+    const deleteSSHFiles = await axios.delete(
+      INFRA_BE_URL + "/authorized_keys",
+      {
+        data: {
+          user_id: user?.id,
+          container_name: container_name,
+        },
+      }
+    );
+    if (deleteSSHFiles.data.return_code !== 0) {
+      return {
+        success: false,
+        message: "failed to delete ssh files",
       };
     }
     await prisma.containers.delete({
@@ -321,7 +334,7 @@ export async function createContainer({
       {
         user_id: user?.id,
         ssh_public_key: sshKey.public_key,
-        ssh_key_name: sshKey.nick_name,
+        container_name: container_name,
       }
     );
 
@@ -340,6 +353,7 @@ export async function createContainer({
         tag: "1.1",
         network: vpc?.id,
         storage: "3G",
+        user_id: user?.id,
       }
     );
     if (createContainerResponse.data.return_code !== 0) {

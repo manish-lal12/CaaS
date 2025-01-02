@@ -2,10 +2,5 @@
   hosts: docker_host
   tasks:
     - name: Delete SSH authorized key file
-      ansible.builtin.file:
-        path: /home/anish/caas/ssh_keys/{{ user_id }}/{{ ssh_key_name }}/authorized_keys
-        state: absent
-    - name: Delete SSH authorized directory
-      ansible.builtin.file:
-        path: /home/anish/caas/ssh_keys/{{ user_id }}/{{ ssh_key_name }}
-        state: absent
+      ansible.builtin.shell: >
+        rm -rf /caas/ssh_keys/{{ user_id }}/{{ container_name }}

@@ -9,12 +9,5 @@
       failed_when: result.exists == false
       community.docker.docker_container:
         name: "{{ container_name }}"
-        image: "{{ image }}:{{ tag }}"
-        cpus: 1
-        memory: 512M
-        # To use storage limit the docker need storage setup with xfs and pquota
-        # storage_opts:
-        #   size: 10G
-        networks:
-          - name: "{{ network }}"
+        keep_volumes: false
         state: absent

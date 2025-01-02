@@ -37,6 +37,8 @@ from type import (
     InitUserData,
     InitUserReturnData,
     SSHKeyGenReturnData,
+    DeleteContainerData,
+    DeleteContainerReturnData,
 )
 
 
@@ -56,7 +58,7 @@ async def ContainerActions(data: ContainerActions) -> ContainerActionsReturnData
 
 
 @app.delete("/container")
-async def delete_container(container: ContainerData) -> ContainerReturnData:
+async def delete_container(container: DeleteContainerData) -> DeleteContainerReturnData:
     return await DeleteContainer(container)
 
 

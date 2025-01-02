@@ -20,6 +20,8 @@ from type import (
     InitUserReturnData,
     DeleteAuthorizedKeysData,
     DeleteAuthorizedKeysReturnData,
+    DeleteContainerData,
+    DeleteContainerReturnData,
 )
 import threading
 from typing import Tuple
@@ -109,7 +111,9 @@ async def CreateContainer(ContainerData: ContainerData) -> ContainerReturnData:
     return ReturnData
 
 
-async def DeleteContainer(ContainerData: ContainerData) -> ContainerReturnData:
+async def DeleteContainer(
+    ContainerData: DeleteContainerData,
+) -> DeleteContainerReturnData:
     res_async: Tuple[threading.Thread, Runner] = run_async(
         private_data_dir=".",
         playbook="container/delete_container.yaml",
@@ -118,7 +122,7 @@ async def DeleteContainer(ContainerData: ContainerData) -> ContainerReturnData:
     res = res_async[1]
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, res_async[0].join)
-    ReturnData = ContainerReturnData(container_ip="None", return_code=res.rc)
+    ReturnData = DeleteContainerReturnData(return_code=res.rc)
     return ReturnData
 
 
