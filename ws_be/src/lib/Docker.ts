@@ -1,9 +1,10 @@
 import Dockerode from "dockerode";
 import fs from "fs";
 import https from "https";
+import { DOCKER_API_ENDPOINT } from "./vars";
 
 export const docker = new Dockerode({
-  host: "http://192.168.122.2",
+  host: DOCKER_API_ENDPOINT,
   port: 2375,
 });
 

@@ -22,6 +22,8 @@ from type import (
     DeleteAuthorizedKeysReturnData,
     DeleteContainerData,
     DeleteContainerReturnData,
+    EditNginxConfigData,
+    EditNginxConfigReturnData,
 )
 import threading
 from typing import Tuple
@@ -87,6 +89,21 @@ async def DeleteNginxConfig(
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, res_async[0].join)
     return DeleteNginxConfigReturnData(return_code=res.rc)
+
+
+async def EditNginxConfig(
+    NginxConfigData: EditNginxConfigData,
+) -> EditNginxConfigReturnData:
+    res_async: Tuple[threading.Thread, Runner] = run_async(
+        private_data_dir=".",
+        playbook="nginx/edit_config.yaml",
+        extravars=NginxConfigData.model_dump(),  # model_dump is converting to dict
+    )
+    res = res_async[1]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, res_async[0].join)
+    ReturnData = EditNginxConfigReturnData(return_code=res.rc)
+    return ReturnData
 
 
 ########################################## Container ###############################################

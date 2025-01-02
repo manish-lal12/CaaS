@@ -79,6 +79,7 @@ function InboundRulesRow({
     if (res.success) {
       router.refresh();
       toast.success("Inbound rule updated successfully");
+      alert("Inbound rule updated successfully");
     } else {
       setError("root", {
         message: res.message,
@@ -95,11 +96,12 @@ function InboundRulesRow({
   async function DeleteInboundRule() {
     setDeleteInboundRule({ ...deleteInboundRuleState, loading: true });
     const res = await deleteInboundRule({
-      config_name: ConfigData.config_name,
       inbound_rule_id: ConfigData.id,
     });
     if (res.success) {
       router.refresh();
+      toast.success("Inbound rule deleted successfully");
+      alert("Inbound rule deleted successfully");
     } else {
       setDeleteInboundRule({
         loading: false,

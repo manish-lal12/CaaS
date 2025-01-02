@@ -148,15 +148,17 @@ export async function deleteContainer({
         name: container_name,
         userId: user?.id,
       },
+      include: {
+        ssh_config: true,
+      },
     });
-
     if (!container) {
       return {
         success: false,
         message: "Error, container not found",
       };
     }
-
+    // Delete container
     const deleteContainerResponse = await axios.delete(
       INFRA_BE_URL + "/container",
       {
@@ -165,7 +167,6 @@ export async function deleteContainer({
         },
       }
     );
-
     if (deleteContainerResponse.data.return_code !== 0) {
       return {
         success: false,
@@ -173,6 +174,7 @@ export async function deleteContainer({
       };
     }
 
+    // Delete ssh files
     const deleteSSHFiles = await axios.delete(
       INFRA_BE_URL + "/authorized_keys",
       {
@@ -188,11 +190,35 @@ export async function deleteContainer({
         message: "failed to delete ssh files",
       };
     }
-    await prisma.containers.delete({
-      where: {
-        name: container_name,
+
+    // Delete ssh tunnel
+    await axios.delete(INFRA_BE_URL + "/sshtunnel", {
+      data: {
+        ssh_tunnel_pid: container.ssh_config.ssh_tunnel_process_id,
       },
     });
+
+    await prisma.$transaction(async (tx) => {
+      await tx.containers.delete({
+        where: {
+          name: container_name,
+        },
+      });
+      const res = await tx.ssh_config.delete({
+        where: {
+          id: container.ssh_config.id,
+        },
+      });
+      await tx.available_ssh_proxy_ports.update({
+        where: {
+          id: res.available_ssh_proxy_portsId,
+        },
+        data: {
+          used: false,
+        },
+      });
+    });
+
     return {
       success: true,
       message: "",
@@ -334,7 +360,7 @@ export async function createContainer({
       {
         user_id: user?.id,
         ssh_public_key: sshKey.public_key,
-        container_name: container_name,
+        container_name: ContainerName,
       }
     );
 

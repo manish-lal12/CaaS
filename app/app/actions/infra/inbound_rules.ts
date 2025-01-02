@@ -4,6 +4,7 @@ import axios from "axios";
 import { inbound_rules_schema } from "@/lib/zod";
 import { INFRA_BE_URL } from "@/lib/vars";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export async function createInboundRule({
   domain_name,
@@ -16,7 +17,8 @@ export async function createInboundRule({
   config_name: string;
   container_name: string;
 }) {
-  const userEmail = "xyz";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   try {
     // validation check
     const validation = inbound_rules_schema.safeParse({
@@ -40,42 +42,27 @@ export async function createInboundRule({
       },
     });
 
-    // get container details
     const container = await prisma.containers.findUnique({
       where: {
         name: container_name,
       },
     });
+
     // check if domain is already allocated
     const doesDomainAlreadyExists = await prisma.inbound_rules.findUnique({
       where: {
         domain_name: domain_name,
       },
     });
+
     if (doesDomainAlreadyExists) {
       return {
         success: false,
-        message:
-          "Domain already in use, you may edit the inbound rule for the same",
+        message: "Domain Name is already in use",
       };
     }
 
-    const createInboundRulesResponse = await axios.post(INFRA_BE_URL, {
-      config_name: config_name,
-      domain_name: domain_name,
-      // maybe changed
-      protocol: "http",
-      ip: container?.ip_address,
-      port: container_port,
-      container_name: container?.name,
-    });
-    if (createInboundRulesResponse.data !== 0) {
-      return {
-        success: false,
-        message: "Error, failed to create inbound rule",
-      };
-    }
-    await prisma.inbound_rules.create({
+    const res = await prisma.inbound_rules.create({
       data: {
         node: "oracle_arm",
         rule_name: config_name,
@@ -87,6 +74,25 @@ export async function createInboundRule({
         containersName: container?.name as string,
       },
     });
+
+    const createInboundRulesResponse = await axios.post(
+      INFRA_BE_URL + "/nginx",
+      {
+        config_id: res.id,
+        domain_name: domain_name,
+        // maybe changed
+        protocol: "http",
+        ip: container?.ip_address,
+        port: container_port,
+        container_name: container?.name,
+      }
+    );
+    if (createInboundRulesResponse.data.return_code !== 0) {
+      return {
+        success: false,
+        message: "Error, failed to create inbound rule",
+      };
+    }
     revalidatePath("/console/containers/[container_id]");
     return {
       success: true,
@@ -112,7 +118,8 @@ export async function editInboundRule({
   container_port: number;
   inbound_rule_id: string;
 }) {
-  const userEmail = "xyz";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   try {
     //validation
     const validation = inbound_rules_schema.safeParse({
@@ -140,38 +147,65 @@ export async function editInboundRule({
         id: inbound_rule_id,
       },
     });
-    try {
-      await prisma.inbound_rules.update({
-        where: {
-          id: inbound_rule_id,
-          userId: user?.id as string,
-        },
-        data: {
-          rule_name: config_name,
-          domain_name,
-          port: container_port,
-        },
-      });
-    } catch (error) {
-      console.log(error);
+
+    if (!rule) {
       return {
         success: false,
-        message: "Error, failed to edit inbound rule",
+        message: "Inbound rule not found",
       };
     }
 
-    const editInboundRuleResponse = await axios.post(INFRA_BE_URL, {
-      config_name: config_name,
-      container_name: rule?.containersName,
-      domain_name: domain_name,
-      container_port: container_port,
+    const inbound_rule = await prisma.inbound_rules.findUnique({
+      where: {
+        id: inbound_rule_id,
+        userId: user?.id as string,
+      },
     });
-    if (editInboundRuleResponse.data !== 0) {
+
+    if (!inbound_rule) {
       return {
         success: false,
-        message: "Error, failed to edit inbound rule",
+        message: "Inbound rule not found",
       };
     }
+
+    const container = await prisma.containers.findUnique({
+      where: {
+        name: rule.containersName,
+      },
+    });
+
+    const editInboundRulesResponse = await axios.post(
+      INFRA_BE_URL + "/edit_nginx",
+      {
+        config_id: inbound_rule.id,
+        domain_name: domain_name,
+        // maybe changed
+        protocol: "http",
+        ip: container?.ip_address,
+        port: container_port,
+        container_name: container?.name,
+      }
+    );
+    if (editInboundRulesResponse.data.return_code !== 0) {
+      return {
+        success: false,
+        message: "Error, failed to create inbound rule",
+      };
+    }
+
+    await prisma.inbound_rules.update({
+      where: {
+        id: inbound_rule_id,
+        userId: user?.id as string,
+      },
+      data: {
+        rule_name: config_name,
+        domain_name,
+        port: container_port,
+      },
+    });
+
     return {
       success: true,
       message: "",
@@ -186,13 +220,12 @@ export async function editInboundRule({
 }
 
 export async function deleteInboundRule({
-  config_name,
   inbound_rule_id,
 }: {
-  config_name: string;
   inbound_rule_id: string;
 }) {
-  const userEmail = "xyz";
+  const session = await auth();
+  const userEmail = session?.user?.email as string;
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -212,21 +245,29 @@ export async function deleteInboundRule({
       };
     }
 
-    const deleteInboundRuleResponse = await axios.post(INFRA_BE_URL, {
-      config_name: config_name,
-      container_name: rule?.containersName,
-    });
-    if (deleteInboundRuleResponse.data !== 0) {
+    const deleteInboundRuleResponse = await axios.delete(
+      INFRA_BE_URL + "/nginx",
+      {
+        data: {
+          config_id: rule.id,
+          container_name: rule?.containersName,
+        },
+      }
+    );
+
+    if (deleteInboundRuleResponse.data.return_code !== 0) {
       return {
         success: false,
         message: "Error, failed to delete inbound rule",
       };
     }
+
     await prisma.inbound_rules.delete({
       where: {
         id: inbound_rule_id,
       },
     });
+
     revalidatePath("/console/containers/[container_id]");
     return {
       success: true,

@@ -47,7 +47,7 @@ class DockerNetworkReturnData(BaseModel):
 
 ########################################## Nginx Config ############################################
 class CreateNginxConfigData(BaseModel):
-    config_name: str
+    config_id: str
     domain_name: str
     protocol: str
     ip: str
@@ -60,11 +60,24 @@ class CreateNginxConfigReturnData(BaseModel):
 
 
 class DeleteNginxConfigData(BaseModel):
-    config_name: str
+    config_id: str
     container_name: str
 
 
 class DeleteNginxConfigReturnData(BaseModel):
+    return_code: int
+
+
+class EditNginxConfigData(BaseModel):
+    config_id: str
+    domain_name: str
+    protocol: str
+    ip: str
+    port: int
+    container_name: str
+
+
+class EditNginxConfigReturnData(BaseModel):
     return_code: int
 
 

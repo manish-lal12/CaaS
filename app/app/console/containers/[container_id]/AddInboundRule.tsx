@@ -26,6 +26,7 @@ export function AddInboundRule({ container_name }: { container_name: string }) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting, isValid, errors },
   } = useForm<AddInboundRuleSchema>({
     resolver: zodResolver(add_inbound_rule_schema),
@@ -40,6 +41,9 @@ export function AddInboundRule({ container_name }: { container_name: string }) {
     });
     if (res.success) {
       router.refresh();
+      toast.success("Inbound rule added successfully");
+      reset();
+      alert("Inbound rule added successfully");
     } else {
       toast.error(res.message);
     }

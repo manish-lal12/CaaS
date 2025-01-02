@@ -11,6 +11,7 @@ from InfrastructureFunctions import (
     DeleteSSHTunnel,
     InitUser,
     DeleteSSHAuthorizedKeysFile,
+    EditNginxConfig,
 )
 from sshkey_tools.keys import (
     RsaPrivateKey,
@@ -39,6 +40,8 @@ from type import (
     SSHKeyGenReturnData,
     DeleteContainerData,
     DeleteContainerReturnData,
+    EditNginxConfigData,
+    EditNginxConfigReturnData,
 )
 
 
@@ -84,6 +87,13 @@ async def delete_nginx_config(
     nginx: DeleteNginxConfigData,
 ) -> DeleteNginxConfigReturnData:
     return await DeleteNginxConfig(nginx)
+
+
+@app.post("/edit_nginx")
+async def edit_nginx_config(
+    nginx: EditNginxConfigData,
+) -> EditNginxConfigReturnData:
+    return await EditNginxConfig(nginx)
 
 
 @app.post("/sshtunnel")

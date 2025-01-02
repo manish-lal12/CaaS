@@ -36,7 +36,7 @@ export const add_inbound_rule_schema = z.object({
   port: z.number({ message: "port ranges from 0 - 65536" }).max(65536),
 });
 
-/// Validation Function//////
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function checkDomainNameAvailability({ username }: { username: string }) {
   try {
     // TODO: update to make api calls
@@ -44,7 +44,7 @@ async function checkDomainNameAvailability({ username }: { username: string }) {
     // const data = await response.json();
     // return data.available;
     // await new Promise((resolve) => setTimeout(resolve, 1000));
-    if (username === "admin") return false;
+    // if (username === "admin") return false;
     return true;
   } catch (error) {
     console.error("Error checking username:", error);

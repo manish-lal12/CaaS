@@ -41,26 +41,30 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-const configs = [
-  {
-    id: "id-dd",
-    config_name: "one",
-    domain_name: "www.hashtag.com",
-    protocol: "http",
-    container_ip: "12.13.14.5",
-    port: 3000,
-  },
-  {
-    id: "idsfdfs",
-    config_name: "two",
-    domain_name: "www.hashtag.com",
-    protocol: "http",
-    container_ip: "12.13.14.10",
-    port: 8443,
-  },
-];
-
-function ContainerDetailTabs({ container_name }: { container_name: string }) {
+function ContainerDetailTabs({
+  container_name,
+  nick_name,
+  node,
+  image,
+  ip_address,
+  createdAt,
+  inbound_rules,
+}: {
+  container_name: string;
+  nick_name: string;
+  node: string;
+  image: string;
+  ip_address: string;
+  createdAt: Date;
+  inbound_rules: {
+    id: string;
+    config_name: string;
+    domain_name: string;
+    protocol: string;
+    container_ip: string;
+    port: number;
+  }[];
+}) {
   const router = useRouter();
   const [deleteContainerError, setDeleteContainerError] = useState("");
   const params = useParams<{ container_id: string }>();
@@ -230,27 +234,28 @@ function ContainerDetailTabs({ container_name }: { container_name: string }) {
         <div className="border-2 rounded-xl p-6 space-y-4">
           <div className=" text-lg text-gray-600 dark:text-white/80">
             <span className="font-bold">Id - </span>
-            jskdfhsd-f7s89df7uref-bydsiufs7d8-9fsf8
+            {nick_name}
           </div>
           <Separator />
           <div className="text-lg text-gray-600 dark:text-white/80">
-            <span className="font-bold">Name - </span> daldia macleren
+            <span className="font-bold">Name - </span> {nick_name}
           </div>
           <Separator />
           <div className="text-lg text-gray-600 dark:text-white/80">
-            <span className="font-bold">Host Node -</span> oracle_arm
+            <span className="font-bold">Host Node -</span> {node}
           </div>
           <Separator />
           <div className="text-lg text-gray-600 dark:text-white/80">
-            <span className="font-bold">Image -</span> aaraz/caas:1.1
+            <span className="font-bold">Image -</span> {image}
           </div>
           <Separator />
           <div className="text-lg text-gray-600 dark:text-white/80">
-            <span className="font-bold">Internal IP - </span> 11.0.0.1
+            <span className="font-bold">Internal IP - </span> {ip_address}
           </div>
           <Separator />
           <div className="text-lg text-gray-600 dark:text-white/80">
-            <span className="font-bold">Created -</span> 2027-20-55 12:02:12
+            <span className="font-bold">Created -</span>{" "}
+            {new Date(createdAt).toUTCString()}
           </div>
         </div>
       </TabsContent>
@@ -272,7 +277,14 @@ function ContainerDetailTabs({ container_name }: { container_name: string }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {configs.map((config, index) => (
+              {inbound_rules.length === 0 && (
+                <TableRow>
+                  <td colSpan={6} className="text-center text-xl py-4">
+                    Create Some Inbound Rules
+                  </td>
+                </TableRow>
+              )}
+              {inbound_rules.map((config, index) => (
                 <InboundRulesRow
                   key={index}
                   ConfigData={{

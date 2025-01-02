@@ -1,6 +1,7 @@
 import { WebSocketServer } from "ws";
 import axios from "axios";
 import { calculateStats } from "../utils/stats";
+import { DOCKER_API_ENDPOINT } from "../lib/vars";
 
 export const metrics_wss = new WebSocketServer({ noServer: true });
 
@@ -8,7 +9,7 @@ metrics_wss.on("connection", async (ws, req) => {
   try {
     const container_id = req.url?.split("=")[1];
 
-    const docker_api_endpoint = `http://192.168.122.2:2375/containers/${container_id}/stats`;
+    const docker_api_endpoint = `${DOCKER_API_ENDPOINT}/containers/${container_id}/stats`;
     const response = await axios({
       method: "GET",
       url: docker_api_endpoint,
