@@ -148,25 +148,6 @@ model inbound_rules {
   containersName   String
 }
 
-model ssh_config {
-  id                          String                    @id @default(cuid())
-  node_name                   String
-  node_port                   String
-  node_internal_ip            String
-  ssh_proxy_name              String
-  ssh_proxy_port              String
-  ssh_tunnel_process_id       String
-  createdAt                   DateTime                  @default(now())
-  updatedAt                   DateTime                  @updatedAt
-  User                        User                      @relation(fields: [userId], references: [id])
-  userId                      String
-  containers                  containers?
-  available_node_ports        available_node_ports      @relation(fields: [available_node_portsId], references: [id], onDelete: Cascade)
-  available_node_portsId      String                    @unique
-  available_ssh_proxy_ports   available_ssh_proxy_ports @relation(fields: [available_ssh_proxy_portsId], references: [id], onDelete: Cascade)
-  available_ssh_proxy_portsId String                    @unique
-}
-
 model available_vpc {
   id      String  @id @default(cuid())
   node    String
@@ -177,21 +158,26 @@ model available_vpc {
   vpc     vpc?
 }
 
-model available_node_ports {
-  id               String      @id @default(cuid())
-  node_name        String
-  node_port        String
-  node_internal_ip String
-  used             Boolean
-  ssh_config       ssh_config?
+model ssh_config {
+  id                          String                    @id @default(cuid())
+  ssh_proxy_node_name         String
+  ssh_proxy_port              Int
+  ssh_tunnel_process_id       String
+  createdAt                   DateTime                  @default(now())
+  updatedAt                   DateTime                  @updatedAt
+  User                        User                      @relation(fields: [userId], references: [id])
+  userId                      String
+  containers                  containers?
+  available_ssh_proxy_ports   available_ssh_proxy_ports @relation(fields: [available_ssh_proxy_portsId], references: [id], onDelete: Cascade)
+  available_ssh_proxy_portsId String                    @unique
 }
 
 model available_ssh_proxy_ports {
-  id             String      @id @default(cuid())
-  ssh_proxy_name String
-  ssh_proxy_port String
-  used           Boolean
-  ssh_config     ssh_config?
+  id                  String      @id @default(cuid())
+  ssh_proxy_node_name String
+  ssh_proxy_port      Int
+  used                Boolean
+  ssh_config          ssh_config?
 }
 
 model ssh_keys {

@@ -1,2 +1,3 @@
 ansible-runner==2.4.0
 fastapi[standard]
+ansible

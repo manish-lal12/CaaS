@@ -1,13 +1,13 @@
 - name: Create ssh tunnel
-  hosts: localhost
+  hosts: ssh_proxy
   tasks:
     - name: Check ssh tunnel
       ansible.builtin.shell: >
-        pgrep -f "ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ node_internal_ip }}:{{ node_port }}"
+        pgrep -f "ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ container_ip }}:22"
       register: check_tunnel
       failed_when: false # Ignore failure if no tunnel is found
     - name: Create SSH tunnel if not already running
       ansible.builtin.shell: >
-        ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ node_internal_ip }}:{{ node_port }} {{ node_name }} &&
-        pgrep -f "ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ node_internal_ip }}:{{ node_port }}"
+        ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ container_ip }}:22 {{ node_name }} &&
+        pgrep -f "ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -f -L 0.0.0.0:{{ ssh_proxy_port }}:{{ container_ip }}:22"
       when: check_tunnel.stdout == ""

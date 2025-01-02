@@ -1,5 +1,5 @@
 - name: Container Actions
-  hosts: vm
+  hosts: docker_host
   tasks:
     - name: Print the action type
       ansible.builtin.debug:

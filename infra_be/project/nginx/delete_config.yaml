@@ -1,5 +1,5 @@
 - name: Nginx configuration
-  hosts: vm
+  hosts: docker_host
   tasks:
     - name: Delete nginx config
       ansible.builtin.file:

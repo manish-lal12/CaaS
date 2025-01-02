@@ -12,6 +12,9 @@ from InfrastructureFunctions import (
     InitUser,
     DeleteSSHAuthorizedKeysFile,
 )
+from sshkey_tools.keys import (
+    RsaPrivateKey,
+)
 from type import (
     ContainerData,
     DockerNetworkData,
@@ -33,6 +36,7 @@ from type import (
     DeleteAuthorizedKeysReturnData,
     InitUserData,
     InitUserReturnData,
+    SSHKeyGenReturnData,
 )
 
 
@@ -107,3 +111,12 @@ async def delete_authorized_keys(
 @app.post("/init_user")
 async def init_user(user: InitUserData) -> InitUserReturnData:
     return await InitUser(user)
+
+
+@app.get("/gensshkey")
+async def gen_ssh_key() -> SSHKeyGenReturnData:
+    rsa_priv = RsaPrivateKey.generate(2048)
+    res = SSHKeyGenReturnData(
+        private_key=rsa_priv.to_string(), public_key=rsa_priv.public_key.to_string()
+    )
+    return res

@@ -1,5 +1,5 @@
 - name: Container
-  hosts: vm
+  hosts: docker_host
   tasks:
     - name: Create container
       community.docker.docker_container:

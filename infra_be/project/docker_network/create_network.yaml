@@ -1,5 +1,5 @@
 - name: DDocker Network
-  hosts: vm
+  hosts: docker_host
   tasks:
     - name: Create docker network
       community.docker.docker_network:

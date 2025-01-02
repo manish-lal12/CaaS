@@ -28,14 +28,6 @@ export async function initializeUser({ username }: { username: string }) {
         message: "No available VPC",
       };
     }
-    await prisma.user.update({
-      where: {
-        id: user?.id,
-      },
-      data: {
-        username: username,
-      },
-    });
 
     const createNetworkResponse = await axios.post(INFRA_BE_URL + "/network", {
       network_name: vpcID,
@@ -46,6 +38,17 @@ export async function initializeUser({ username }: { username: string }) {
       return {
         success: false,
         message: "error, failed to create network",
+      };
+    }
+
+    const create_ssh_folder = await axios.post(INFRA_BE_URL + "/init_user", {
+      user_id: userID,
+    });
+
+    if (create_ssh_folder.data.return_code !== 0) {
+      return {
+        success: false,
+        message: "error, failed to create ssh folder",
       };
     }
 
@@ -68,6 +71,15 @@ export async function initializeUser({ username }: { username: string }) {
         },
         data: {
           used: true,
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          username: username,
+          welcomed: true,
         },
       });
     });

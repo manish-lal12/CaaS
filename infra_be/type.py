@@ -62,8 +62,7 @@ class DeleteNginxConfigReturnData(BaseModel):
 ########################################## SSH ############################################
 class CreateSSHTunnelData(BaseModel):
     ssh_proxy_port: int
-    node_internal_ip: str
-    node_port: int
+    container_ip: str
     node_name: str
 
 
@@ -97,6 +96,11 @@ class DeleteAuthorizedKeysData(BaseModel):
 
 class DeleteAuthorizedKeysReturnData(BaseModel):
     return_code: int
+
+
+class SSHKeyGenReturnData(BaseModel):
+    private_key: str
+    public_key: str
 
 
 ########################################## user ############################################

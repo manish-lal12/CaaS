@@ -17,6 +17,25 @@ async function main() {
   await prisma.available_vpc.createMany({
     data: networkAddressGenerator(),
   });
+
+  function PortNumberGenerator(): {
+    ssh_proxy_node_name: string;
+    ssh_proxy_port: number;
+    used: boolean;
+  }[] {
+    const temp = [];
+    for (let i = 2000; i <= 2200; i++) {
+      temp.push({
+        ssh_proxy_node_name: "azure_baby",
+        ssh_proxy_port: i,
+        used: false,
+      });
+    }
+    return temp;
+  }
+  await prisma.available_ssh_proxy_ports.createMany({
+    data: PortNumberGenerator(),
+  });
 }
 main()
   .then(async () => {

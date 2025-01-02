@@ -10,7 +10,7 @@ import {
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CreateNewSSHKeys from "./CreateNewSSHKEY";
-import { UseOwnSSHKeys } from "./UseOwnSSHKeys";
+import { UseOwnSSHKeys } from "./ImportSSHKeys";
 function AddSSHKeys() {
   return (
     <Sheet>

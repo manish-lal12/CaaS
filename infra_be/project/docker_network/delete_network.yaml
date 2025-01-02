@@ -1,5 +1,5 @@
 - name: Docker Network
-  hosts: vm
+  hosts: docker_host
   tasks:
     - name: Get network info
       community.docker.docker_network_info:

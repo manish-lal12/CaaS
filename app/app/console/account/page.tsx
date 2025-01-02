@@ -20,6 +20,14 @@ async function Profile() {
     where: {
       email: session?.user?.email as string,
     },
+    include: {
+      ssh_keys: {
+        select: {
+          nick_name: true,
+          id: true,
+        },
+      },
+    },
   });
   return (
     <div className="md:m-6 m-2 md:space-y-4 space-y-2">
@@ -31,76 +39,89 @@ async function Profile() {
           <p>Upgrade to Premium for reliable and consistent performance!</p>
         </div>
       </div>
-      <div className="flex justify-between">
-        <div className="text-2xl font-bold text-amber-500">Account</div>
-        <LogoutButton />
-      </div>
-      <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col">
-        <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col md:gap-4 gap-2">
-          <div>
-            <div className="font-bold">Account ID</div>
-            <div>{user?.id}</div>
-          </div>
-          <div>
-            <div className="font-bold">Account Name</div>
-            <div>{user?.name}</div>
-          </div>
+      <div className="md:space-y-4 space-y-2">
+        <div className="flex justify-between">
+          <div className="text-2xl font-bold text-amber-500">Account</div>
+          <LogoutButton />
         </div>
-        <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col gap-4">
-          <div>
-            <div className="font-bold">Email</div>
-            <div>{user?.email}</div>
+        <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col">
+          <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col md:gap-4 gap-2">
+            <div>
+              <div className="font-bold">Account ID</div>
+              <div>{user?.id}</div>
+            </div>
+            <div>
+              <div className="font-bold">Account Name</div>
+              <div>{user?.name}</div>
+            </div>
           </div>
-          <div>
-            <div className="font-bold">User Name</div>
-            <div>{user?.username}</div>
-          </div>
-        </div>
-      </div>
-      <div className="text-2xl font-bold text-amber-500">Billing</div>
-      <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col">
-        <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col md:gap-4 gap-2">
-          <div>
-            <div className="font-bold">Billing ID</div>
-            <div>{user?.id}</div>
-          </div>
-          <div>
-            <div className="font-bold">Month</div>
-            <div>2024-Jul</div>
-          </div>
-        </div>
-        <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col gap-4">
-          <div>
-            <div className="font-bold">Cost</div>
-            <div>$00.00</div>
-          </div>
-          <div>
-            <div className="font-bold">Plan</div>
-            <div>Free</div>
+          <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col gap-4">
+            <div>
+              <div className="font-bold">Email</div>
+              <div>{user?.email}</div>
+            </div>
+            <div>
+              <div className="font-bold">User Name</div>
+              <div>{user?.username}</div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="text-2xl font-bold flex items-center justify-between">
-        <div className="text-amber-500">SSH Keys</div>
-        <AddSSHKeys />
+      <div className="md:space-y-4 space-y-2">
+        <div className="text-2xl font-bold text-amber-500">Billing</div>
+        <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col">
+          <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col md:gap-4 gap-2">
+            <div>
+              <div className="font-bold">Billing ID</div>
+              <div>{user?.id}</div>
+            </div>
+            <div>
+              <div className="font-bold">Month</div>
+              <div>2024-Jul</div>
+            </div>
+          </div>
+          <div className="md:grid md:space-x-10 grid-cols-2 flex flex-col gap-4">
+            <div>
+              <div className="font-bold">Cost</div>
+              <div>$00.00</div>
+            </div>
+            <div>
+              <div className="font-bold">Plan</div>
+              <div>Free</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col">
-        <Table>
-          <TableHeader className="">
-            <TableRow>
-              <TableHead className="">Key Name</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">Name</TableCell>
-              <TableCell className="flex justify-end">
-                <DeleteSSHKey />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      <div className="md:grid grid-cols-2 md:gap-4 gap-2 space-y-2">
+        <div className="md:space-y-4 space-y-2 ">
+          <div className="text-2xl font-bold flex items-center justify-between">
+            <div className="text-amber-500">SSH Keys</div>
+            <AddSSHKeys />
+          </div>
+          <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col">
+            <Table>
+              <TableHeader className="">
+                <TableRow>
+                  <TableHead className="">Key Name</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {user?.ssh_keys.map((ssh_key) => (
+                  <TableRow key={ssh_key.id}>
+                    <TableCell className="font-medium">
+                      {ssh_key.nick_name}
+                    </TableCell>
+                    <TableCell className="flex justify-end">
+                      <DeleteSSHKey id={ssh_key.id} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+        <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col text-xl bg-neutral-900"></div>
       </div>
 
       {/* <div className="bg-red-600 hover:bg-red-500 cursor-pointer py-1 px-4 rounded-full w-fit text-white text-lg text-center ">

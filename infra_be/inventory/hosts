@@ -1,5 +1,5 @@
-[vm]
-192.168.122.2 ansible_connection=ssh ansible_user=root ansible_ssh_private_key_file=/home/anish/.ssh/ANAR_github_pri
+[docker_host]
+192.168.122.2 ansible_connection=ssh ansible_user=root ansible_ssh_private_key_file=/home/anish/.ssh/github_pri
 
-[localhost]
+[ssh_proxy]
 127.0.0.1 ansible_connection=ssh ansible_user=anish ansible_ssh_private_key_file=/home/anish/.ssh/github_pri

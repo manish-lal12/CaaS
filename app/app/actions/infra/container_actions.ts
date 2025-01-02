@@ -250,9 +250,11 @@ export async function restartContainer({
 export async function createContainer({
   container_name,
   vpc_id,
+  ssh_key_id,
 }: {
   container_name: string;
   vpc_id: string;
+  ssh_key_id: string;
 }) {
   const session = await auth();
   const userEmail = session?.user?.email as string;
@@ -260,6 +262,7 @@ export async function createContainer({
     const validation = container_create_schema.safeParse({
       container_name: container_name,
       vpc_id: vpc_id,
+      ssh_key_id: ssh_key_id,
     });
     if (!validation.success) {
       return {
@@ -267,7 +270,6 @@ export async function createContainer({
         message: "Error, Invalid input",
       };
     }
-
     const vpc = await prisma.vpc.findUnique({
       where: {
         id: vpc_id,
@@ -276,7 +278,60 @@ export async function createContainer({
         },
       },
     });
+    const sshKey = await prisma.ssh_keys.findUnique({
+      where: {
+        id: ssh_key_id,
+      },
+    });
+    if (!vpc) {
+      return {
+        success: false,
+        message: "Error, VPC not found",
+      };
+    }
+    if (!sshKey) {
+      return {
+        success: false,
+        message: "Error, SSH Key not found",
+      };
+    }
     const ContainerName = uuid();
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+    });
+
+    const available_ssh_proxy_port =
+      await prisma.available_ssh_proxy_ports.findFirst({
+        where: {
+          used: false,
+        },
+      });
+    if (!available_ssh_proxy_port) {
+      return {
+        success: false,
+        message: "Error, No available ssh proxy port",
+      };
+    }
+
+    const create_authorized_key = await axios.post(
+      INFRA_BE_URL + "/authorized_keys",
+      {
+        user_id: user?.id,
+        ssh_public_key: sshKey.public_key,
+        ssh_key_name: sshKey.nick_name,
+      }
+    );
+
+    if (create_authorized_key.data.return_code !== 0) {
+      return {
+        success: false,
+        message: "error, Failed to ssh key",
+      };
+    }
+
     const createContainerResponse = await axios.post(
       INFRA_BE_URL + "/container",
       {
@@ -293,11 +348,51 @@ export async function createContainer({
         message: "error, Failed to create container",
       };
     }
-    const user = await prisma.user.findUnique({
-      where: {
-        email: userEmail,
+
+    const sshTunnelResponse = await axios.post(INFRA_BE_URL + "/sshtunnel", {
+      ssh_proxy_port: available_ssh_proxy_port?.ssh_proxy_port,
+      container_ip: createContainerResponse.data.container_ip,
+      node_name: available_ssh_proxy_port?.ssh_proxy_node_name,
+    });
+
+    if (sshTunnelResponse.data.return_code !== 0) {
+      return {
+        success: false,
+        message: "error, Failed to create ssh tunnel",
+      };
+    }
+    try {
+      await prisma.available_ssh_proxy_ports.update({
+        where: {
+          id: available_ssh_proxy_port?.id as string,
+        },
+        data: {
+          used: true,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      await axios.delete(INFRA_BE_URL + "/sshtunnel", {
+        data: {
+          ssh_tunnel_pid: sshTunnelResponse.data.ssh_tunnel_pid,
+        },
+      });
+      return {
+        success: false,
+        message: "error, database update failed",
+      };
+    }
+
+    const ssh_config = await prisma.ssh_config.create({
+      data: {
+        ssh_proxy_node_name: available_ssh_proxy_port.ssh_proxy_node_name,
+        ssh_proxy_port: available_ssh_proxy_port.ssh_proxy_port,
+        ssh_tunnel_process_id: sshTunnelResponse.data.ssh_tunnel_pid,
+        available_ssh_proxy_portsId: available_ssh_proxy_port.id,
+        userId: user?.id as string,
       },
     });
+
     const containerIP = createContainerResponse.data.container_ip;
     await prisma.containers.create({
       data: {
@@ -310,6 +405,8 @@ export async function createContainer({
         vpcId: vpc?.id as string,
         ip_address: containerIP,
         userId: user?.id as string,
+        ssh_config_id: ssh_config.id,
+        ssh_keysId: sshKey.id,
       },
     });
     revalidatePath("/console/containers");

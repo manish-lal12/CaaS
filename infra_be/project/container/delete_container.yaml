@@ -1,5 +1,5 @@
 - name: Container
-  hosts: vm
+  hosts: docker_host
   tasks:
     - name: Get container detail
       community.docker.docker_container_info:

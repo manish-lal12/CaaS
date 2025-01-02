@@ -28,11 +28,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DEFAULT_VPC_NAME } from "@/lib/vars";
+import Link from "next/link";
 
 export function CreateContainer({
   vpcs,
+  ssh_keys,
 }: {
-  vpcs: { id: string; vpc_name: string }[];
+  vpcs: { id: string; vpc_name: string }[] | undefined;
+  ssh_keys: { id: string; nick_name: string }[] | undefined;
 }) {
   const router = useRouter();
   type ContainerCreationSchema = z.infer<typeof container_create_schema>;
@@ -43,17 +46,18 @@ export function CreateContainer({
     setValue,
     control,
     reset,
+    trigger,
     formState: { isSubmitting, isValid, errors },
   } = useForm<ContainerCreationSchema>({
     resolver: zodResolver(container_create_schema),
     mode: "onChange",
     defaultValues: {
-      vpc_id: vpcs.filter((item) => item.vpc_name === DEFAULT_VPC_NAME)[0].id,
+      vpc_id: vpcs?.filter((item) => item.vpc_name === DEFAULT_VPC_NAME)[0].id,
     },
   });
 
   const UserVPCs = vpcs;
-  const defaultVPCID = UserVPCs.filter(
+  const defaultVPCID = UserVPCs?.filter(
     (item) => item.vpc_name === DEFAULT_VPC_NAME
   )[0].id;
 
@@ -61,6 +65,7 @@ export function CreateContainer({
     const res = await createContainer({
       container_name: FormData.container_name,
       vpc_id: FormData.vpc_id,
+      ssh_key_id: FormData.ssh_key_id,
     });
     if (res.success) {
       toast.success("Container created successfully");
@@ -102,7 +107,7 @@ export function CreateContainer({
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="vpc" className="text-nowrap md:text-base text-sm">
-                VPC
+                VPC <span className="text-red-600">*</span>
               </Label>
               <Controller
                 control={control}
@@ -120,7 +125,7 @@ export function CreateContainer({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup id="vpc">
-                        {UserVPCs.map((item) => (
+                        {UserVPCs?.map((item) => (
                           <SelectItem key={item.id} value={item.id}>
                             {item.vpc_name}
                           </SelectItem>
@@ -130,6 +135,48 @@ export function CreateContainer({
                   </Select>
                 )}
               />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="ssh_key"
+                className="text-nowrap md:text-base text-sm"
+              >
+                SSH Key <span className="text-red-600">*</span>
+              </Label>
+              <Controller
+                control={control}
+                name="ssh_key_id"
+                render={() => (
+                  <Select
+                    onValueChange={(e) => {
+                      setValue("ssh_key_id", e);
+                      clearErrors("ssh_key_id");
+                      trigger("ssh_key_id");
+                    }}
+                    disabled={ssh_keys?.length === 0}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select SSH Key" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup id="ssh_key">
+                        {ssh_keys?.map((sshkey) => {
+                          return (
+                            <SelectItem key={sshkey.id} value={sshkey.id}>
+                              {sshkey.nick_name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <Link href={"/console/account"}>
+                <Button variant={"link"} className="text-blue-500">
+                  Create New ⭐
+                </Button>
+              </Link>
             </div>
           </div>
           <DialogFooter>

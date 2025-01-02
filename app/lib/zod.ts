@@ -18,6 +18,7 @@ export const edit_vpc_schema = z.object({
 export const container_create_schema = z.object({
   container_name: z.string({ message: "Minimum 3 character" }).min(3),
   vpc_id: z.string({ message: "VPC id required" }),
+  ssh_key_id: z.string({ message: "Invalid SSH Key ID" }),
 });
 
 export const add_inbound_rule_schema = z.object({

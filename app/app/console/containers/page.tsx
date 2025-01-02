@@ -16,6 +16,26 @@ async function ContainersPage() {
     },
   });
 
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string,
+    },
+    select: {
+      vpc: {
+        select: {
+          id: true,
+          vpc_name: true,
+        },
+      },
+      ssh_keys: {
+        select: {
+          id: true,
+          nick_name: true,
+        },
+      },
+    },
+  });
+
   return (
     <div
       style={{ height: "calc(100vh - 65px)" }}
@@ -24,7 +44,7 @@ async function ContainersPage() {
       <div className="text-2xl font-bold flex justify-between items-center">
         <div>Containers</div>
         <div>
-          <CreateContainer vpcs={user_vpc} />
+          <CreateContainer vpcs={user?.vpc} ssh_keys={user?.ssh_keys} />
         </div>
       </div>
       <div className="md:p-6 p-2 space-y-4 border-2 rounded-xl">
