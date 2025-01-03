@@ -191,7 +191,7 @@ export async function deleteContainer({
       };
     }
 
-    // Delete ssh tunnel
+    // Log the event where the ssh tunnel was already stopped
     await axios.delete(INFRA_BE_URL + "/sshtunnel", {
       data: {
         ssh_tunnel_pid: container.ssh_config.ssh_tunnel_process_id,
@@ -376,7 +376,7 @@ export async function createContainer({
       {
         container_name: ContainerName,
         image: "aaraz/caas",
-        tag: "1.1",
+        tag: "1.2",
         network: vpc?.id,
         storage: "3G",
         user_id: user?.id,
@@ -440,7 +440,7 @@ export async function createContainer({
         nick_name: container_name,
         node: "oracle_arm",
         image: "aaraz/caas",
-        tag: "1.1",
+        tag: "1.2",
         state: $Enums.CONTAINER_STATE.STARTED,
         vpcId: vpc?.id as string,
         ip_address: containerIP,
