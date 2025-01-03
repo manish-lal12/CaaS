@@ -32,7 +32,7 @@ function DeleteSSHKey({ id }: { id: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Trash2 className="hover:text-red-600 cursor-pointer md:text-white text-red-600" />
+        <Trash2 className="cursor-pointer hover:text-red-700" />
       </DialogTrigger>
       <DialogContent className="w-full md:max-w-md">
         <DialogHeader>

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import DeleteSSHKey from "./DeleteSSHKey";
 import AddSSHKeys from "./SSHKeys,";
+import DownloadSSHKeys from "./DownloadSSHKey";
 
 async function Profile() {
   const session = await auth();
@@ -25,6 +26,8 @@ async function Profile() {
         select: {
           nick_name: true,
           id: true,
+          private_key: true,
+          public_key: true,
         },
       },
     },
@@ -112,7 +115,12 @@ async function Profile() {
                     <TableCell className="font-medium">
                       {ssh_key.nick_name}
                     </TableCell>
-                    <TableCell className="flex justify-end">
+                    <TableCell className="flex justify-end md:gap-4 gap-2">
+                      <DownloadSSHKeys
+                        ssh_private_key={ssh_key.private_key}
+                        ssh_key_nick_name={ssh_key.nick_name}
+                        ssh_public_key={ssh_key.public_key}
+                      />
                       <DeleteSSHKey id={ssh_key.id} />
                     </TableCell>
                   </TableRow>
@@ -121,7 +129,7 @@ async function Profile() {
             </Table>
           </div>
         </div>
-        <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col text-xl bg-neutral-900"></div>
+        <div className="md:p-6 p-3 rounded-xl border-2 space-y-4 flex flex-col text-xl dark:bg-neutral-900 bg-muted"></div>
       </div>
 
       {/* <div className="bg-red-600 hover:bg-red-500 cursor-pointer py-1 px-4 rounded-full w-fit text-white text-lg text-center ">
