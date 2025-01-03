@@ -5,6 +5,7 @@ import { inbound_rules_schema } from "@/lib/zod";
 import { INFRA_BE_URL } from "@/lib/vars";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
+import { CfClient } from "@/lib/cloudflare.";
 
 export async function createInboundRule({
   domain_name,
@@ -62,6 +63,15 @@ export async function createInboundRule({
       };
     }
 
+    const create_dns = await CfClient.dns.records.create({
+      type: "A",
+      zone_id: process.env.CLOUDFLARE_ZONE_ID as string,
+      name: domain_name,
+      content: process.env.ORACLE_NODE_IP as string,
+      proxied: true,
+      comment: user?.id as string,
+    });
+
     const res = await prisma.inbound_rules.create({
       data: {
         node: "oracle_arm",
@@ -72,6 +82,8 @@ export async function createInboundRule({
         port: container_port,
         userId: user?.id as string,
         containersName: container?.name as string,
+        cloudflare_record_id: create_dns.id as string,
+        cloudflare_zone: process.env.CLOUDFLARE_ZONE_ID as string,
       },
     });
 
@@ -93,6 +105,7 @@ export async function createInboundRule({
         message: "Error, failed to create inbound rule",
       };
     }
+
     revalidatePath("/console/containers/[container_id]");
     return {
       success: true,
@@ -194,6 +207,18 @@ export async function editInboundRule({
       };
     }
 
+    const update_dns_record = await CfClient.dns.records.update(
+      inbound_rule.cloudflare_record_id,
+      {
+        type: "A",
+        zone_id: inbound_rule.cloudflare_zone,
+        name: domain_name,
+        content: process.env.ORACLE_NODE_IP as string,
+        proxied: true,
+        comment: user?.id as string,
+      }
+    );
+
     await prisma.inbound_rules.update({
       where: {
         id: inbound_rule_id,
@@ -203,6 +228,7 @@ export async function editInboundRule({
         rule_name: config_name,
         domain_name,
         port: container_port,
+        cloudflare_record_id: update_dns_record.id,
       },
     });
 
@@ -261,6 +287,10 @@ export async function deleteInboundRule({
         message: "Error, failed to delete inbound rule",
       };
     }
+
+    await CfClient.dns.records.delete(rule.cloudflare_record_id, {
+      zone_id: process.env.CLOUDFLARE_ZONE_ID as string,
+    });
 
     await prisma.inbound_rules.delete({
       where: {

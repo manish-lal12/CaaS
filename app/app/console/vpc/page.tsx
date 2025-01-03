@@ -96,7 +96,7 @@ async function VpcPage() {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  <EditVpc VpcName={vpc.vpc_name} vpc_id={vpc.id} />
+                  <EditVpc vpc_id={vpc.id} />
                 </TableCell>
               </TableRow>
             ))}

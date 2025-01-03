@@ -133,19 +133,21 @@ model containers {
 }
 
 model inbound_rules {
-  id               String     @id @default(cuid())
-  node             String
-  rule_name        String // it is config_name in nginx infra. backend
-  domain_name      String     @unique
-  service_protocol String
-  container_ip     String
-  port             Int
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  User             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           String
-  containers       containers @relation(fields: [containersName], references: [name], onDelete: Cascade)
-  containersName   String
+  id                   String     @id @default(cuid())
+  node                 String
+  rule_name            String // it is config_name in nginx infra. backend
+  domain_name          String     @unique
+  service_protocol     String
+  container_ip         String
+  port                 Int
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  User                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String
+  containers           containers @relation(fields: [containersName], references: [name], onDelete: Cascade)
+  containersName       String
+  cloudflare_zone      String
+  cloudflare_record_id String
 }
 
 model available_vpc {
@@ -191,3 +193,15 @@ model ssh_keys {
   userId      String
   containers  containers[]
 }
+
+// model available_node {
+//   id        String @id @default(cuid())
+//   node_name String
+//   node_ip   String @unique
+// }
+
+// model cloudflare_zones{
+//   id          String @id @default(cuid())
+//   zone_name   String
+//   zone_id     String
+// }

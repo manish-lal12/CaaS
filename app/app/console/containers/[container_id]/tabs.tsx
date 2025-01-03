@@ -234,7 +234,7 @@ function ContainerDetailTabs({
         <div className="border-2 rounded-xl p-6 space-y-4">
           <div className=" text-lg text-gray-600 dark:text-white/80">
             <span className="font-bold">Id - </span>
-            {nick_name}
+            {container_name}
           </div>
           <Separator />
           <div className="text-lg text-gray-600 dark:text-white/80">
