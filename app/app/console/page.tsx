@@ -1,22 +1,22 @@
-import { auth } from "@/auth";
-import { ConsoleOptions, ConsoleContainers } from "./ConsoleHomeComponents";
-import prisma from "@/lib/db";
+import { auth } from "@/auth"
+import { ConsoleOptions, ConsoleContainers } from "./ConsoleHomeComponents"
+import prisma from "@/lib/db"
 
 async function ConsolePage() {
-  const session = await auth();
+  const session = await auth()
   const user = await prisma.user.findUnique({
     where: {
-      email: session?.user?.email as string,
+      email: session?.user?.email as string
     },
     include: {
       vpc: {
         select: {
           vpc_name: true,
-          id: true,
-        },
-      },
-    },
-  });
+          id: true
+        }
+      }
+    }
+  })
 
   return (
     <>
@@ -30,7 +30,7 @@ async function ConsolePage() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default ConsolePage;
+export default ConsolePage

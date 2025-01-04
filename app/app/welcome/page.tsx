@@ -1,5 +1,5 @@
-import { AnimatedText } from "@/components/AnimatedText";
-import UsernameInput from "./username_form";
+import { AnimatedText } from "@/components/AnimatedText"
+import UsernameInput from "./username_form"
 
 async function WelcomePage() {
   return (
@@ -12,7 +12,7 @@ async function WelcomePage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default WelcomePage;
+export default WelcomePage

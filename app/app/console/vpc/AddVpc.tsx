@@ -1,6 +1,6 @@
-"use client";
-import { createVPC } from "@/app/actions/infra";
-import { Button } from "@/components/ui/button";
+"use client"
+import { createVPC } from "@/app/actions/infra"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -8,46 +8,46 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { add_vpc_schema } from "@/lib/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+  DialogTrigger
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { add_vpc_schema } from "@/lib/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2, Plus } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
 function AddVpc() {
-  type Schema = z.infer<typeof add_vpc_schema>;
+  type Schema = z.infer<typeof add_vpc_schema>
   const {
     register,
     reset,
     handleSubmit,
-    formState: { isSubmitting, errors, isValid },
+    formState: { isSubmitting, errors, isValid }
   } = useForm<Schema>({
     resolver: zodResolver(add_vpc_schema),
-    mode: "onChange",
-  });
-  const [error, setError] = useState("");
-  const router = useRouter();
+    mode: "onChange"
+  })
+  const [error, setError] = useState("")
+  const router = useRouter()
 
   const onSubmit: SubmitHandler<Schema> = async (formData) => {
     const res = await createVPC({
-      vpc_name: formData.name,
-    });
+      vpc_name: formData.name
+    })
     if (res.success) {
-      toast.success("VPC created successfully, You can close the dialog box");
-      reset();
-      router.refresh();
+      toast.success("VPC created successfully, You can close the dialog box")
+      reset()
+      router.refresh()
     } else {
-      setError(res.message);
+      setError(res.message)
     }
-    return;
-  };
+    return
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -100,7 +100,7 @@ function AddVpc() {
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
-export default AddVpc;
+export default AddVpc

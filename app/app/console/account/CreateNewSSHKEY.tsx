@@ -1,31 +1,31 @@
-"use client";
-import { CreateAndSaveSSHKey } from "@/app/actions/database";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+"use client"
+import { CreateAndSaveSSHKey } from "@/app/actions/database"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 function CreateNewSSHKeys() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [name, setName] = useState("");
-  const router = useRouter();
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [name, setName] = useState("")
+  const router = useRouter()
   async function CreateSSHKeys() {
-    setLoading(true);
+    setLoading(true)
     const res = await CreateAndSaveSSHKey({
-      key_name: name,
-    });
+      key_name: name
+    })
     if (res.success) {
-      setName("");
-      setError("");
-      alert("Key Created Successfully");
-      router.refresh();
+      setName("")
+      setError("")
+      alert("Key Created Successfully")
+      router.refresh()
     } else {
-      setError("Creating Key Failed, Try again!");
+      setError("Creating Key Failed, Try again!")
     }
-    setLoading(false);
+    setLoading(false)
   }
   return (
     <div>
@@ -41,7 +41,7 @@ function CreateNewSSHKeys() {
             id="sshkeyname"
             value={name}
             onChange={(e) => {
-              setName(e.target.value);
+              setName(e.target.value)
             }}
           />
           {error && <div className="text-red-500">{error}</div>}
@@ -62,7 +62,7 @@ function CreateNewSSHKeys() {
         )}
       </form>
     </div>
-  );
+  )
 }
 
-export default CreateNewSSHKeys;
+export default CreateNewSSHKeys

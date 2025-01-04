@@ -18,7 +18,9 @@
 
 .input__container:hover {
   transform: rotateX(5deg) rotateY(1 deg) scale(1.05);
-  box-shadow: 25px 25px 0 -5px #e9b50b, 25px 25px 0 0 #000;
+  box-shadow:
+    25px 25px 0 -5px #e9b50b,
+    25px 25px 0 0 #000;
 }
 
 .shadow__input {

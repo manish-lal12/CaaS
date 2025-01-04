@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import NavBar from "@/components/ui/NavBar";
-import { AnimatedBeamMultipleOutputDemo } from "@/components/AnimatedBeamMultiple";
+import NavBar from "@/components/ui/NavBar"
+import { AnimatedBeamMultipleOutputDemo } from "@/components/AnimatedBeamMultiple"
 // import { FaGoogle } from "react-icons/fa";
 
 function Home() {
@@ -72,7 +72,7 @@ function Home() {
         </div>
       </section>
     </main>
-  );
+  )
 }
 
-export default Home;
+export default Home

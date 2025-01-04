@@ -4,18 +4,18 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Edit, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+  TableRow
+} from "@/components/ui/table"
+import { Edit, Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DialogTrigger
+} from "@/components/ui/dialog"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -24,90 +24,90 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { inbound_rules_schema } from "@/lib/zod";
-import { z } from "zod";
-import { useState } from "react";
-import { deleteInboundRule, editInboundRule } from "@/app/actions/infra";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog"
+import { Input } from "@/components/ui/input"
+import { Loader2 } from "lucide-react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { inbound_rules_schema } from "@/lib/zod"
+import { z } from "zod"
+import { useState } from "react"
+import { deleteInboundRule, editInboundRule } from "@/app/actions/infra"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 function InboundRulesRow({
-  ConfigData,
+  ConfigData
 }: {
   ConfigData: {
-    id: string;
-    config_name: string;
-    domain_name: string;
-    protocol: string;
-    container_ip: string;
-    port: number;
-  };
+    id: string
+    config_name: string
+    domain_name: string
+    protocol: string
+    container_ip: string
+    port: number
+  }
 }) {
-  const router = useRouter();
-  type Schema = z.infer<typeof inbound_rules_schema>;
+  const router = useRouter()
+  type Schema = z.infer<typeof inbound_rules_schema>
   const {
     register,
     handleSubmit,
     setError,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, errors }
   } = useForm<Schema>({
     resolver: zodResolver(inbound_rules_schema),
     mode: "onChange",
     defaultValues: {
       config_name: ConfigData.config_name,
       domain_name: ConfigData.domain_name,
-      port: ConfigData.port,
-    },
-  });
+      port: ConfigData.port
+    }
+  })
 
   const onSubmit: SubmitHandler<Schema> = async (formData) => {
     setError("root", {
-      message: "",
-    });
+      message: ""
+    })
     const res = await editInboundRule({
       config_name: formData.config_name,
       domain_name: formData.domain_name,
       container_port: formData.port,
-      inbound_rule_id: ConfigData.id,
-    });
+      inbound_rule_id: ConfigData.id
+    })
     if (res.success) {
-      router.refresh();
-      toast.success("Inbound rule updated successfully");
-      alert("Inbound rule updated successfully");
+      router.refresh()
+      toast.success("Inbound rule updated successfully")
+      alert("Inbound rule updated successfully")
     } else {
       setError("root", {
-        message: res.message,
-      });
-      toast.error(res.message);
+        message: res.message
+      })
+      toast.error(res.message)
     }
-  };
+  }
 
   const [deleteInboundRuleState, setDeleteInboundRule] = useState({
     loading: false,
-    error: "",
-  });
+    error: ""
+  })
 
   async function DeleteInboundRule() {
-    setDeleteInboundRule({ ...deleteInboundRuleState, loading: true });
+    setDeleteInboundRule({ ...deleteInboundRuleState, loading: true })
     const res = await deleteInboundRule({
-      inbound_rule_id: ConfigData.id,
-    });
+      inbound_rule_id: ConfigData.id
+    })
     if (res.success) {
-      router.refresh();
-      toast.success("Inbound rule deleted successfully");
-      alert("Inbound rule deleted successfully");
+      router.refresh()
+      toast.success("Inbound rule deleted successfully")
+      alert("Inbound rule deleted successfully")
     } else {
       setDeleteInboundRule({
         loading: false,
-        error: res.message,
-      });
-      toast.error(res.message);
+        error: res.message
+      })
+      toast.error(res.message)
     }
   }
 
@@ -229,7 +229,7 @@ function InboundRulesRow({
         </div>
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
-export default InboundRulesRow;
+export default InboundRulesRow

@@ -1,26 +1,26 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import "./welcome.css";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { initializeUser } from "../actions/infra";
-import { useRouter } from "next/navigation";
+"use client"
+import { Button } from "@/components/ui/button"
+import "./welcome.css"
+import { useState } from "react"
+import { Loader2 } from "lucide-react"
+import { initializeUser } from "../actions/infra"
+import { useRouter } from "next/navigation"
 
 function UsernameInput() {
-  const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const router = useRouter();
+  const [loading, setLoading] = useState(false)
+  const [username, setUsername] = useState("")
+  const router = useRouter()
   async function HandleSubmit() {
-    setLoading(true);
+    setLoading(true)
     const res = await initializeUser({
-      username: username,
-    });
+      username: username
+    })
     if (!res.success) {
-      alert(res.message);
-      setLoading(false);
-      return;
+      alert(res.message)
+      setLoading(false)
+      return
     }
-    router.push("/console");
+    router.push("/console")
   }
   return (
     <>
@@ -45,7 +45,7 @@ function UsernameInput() {
           placeholder="Enter username"
           value={username}
           onChange={(e) => {
-            setUsername(e.target.value);
+            setUsername(e.target.value)
           }}
         />
       </div>
@@ -65,7 +65,7 @@ function UsernameInput() {
         </Button>
       )}
     </>
-  );
+  )
 }
 
-export default UsernameInput;
+export default UsernameInput

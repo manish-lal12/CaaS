@@ -1,29 +1,29 @@
-"use client";
-import Link from "next/link";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+"use client"
+import Link from "next/link"
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import SideBarLinks from "../SideBarLinks";
-import { LogoutButton } from "../LoginLogoutButton";
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { useEffect, useState } from "react"
+import Image from "next/image"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import SideBarLinks from "../SideBarLinks"
+import { LogoutButton } from "../LoginLogoutButton"
 
 function NavBar() {
-  const { setTheme, theme } = useTheme();
-  const [themeValue, setThemeValue] = useState("dark");
+  const { setTheme, theme } = useTheme()
+  const [themeValue, setThemeValue] = useState("dark")
   useEffect(() => {
-    const val = localStorage.getItem("theme");
+    const val = localStorage.getItem("theme")
     if (val) {
-      setThemeValue(val);
+      setThemeValue(val)
     }
-  }, [theme]);
+  }, [theme])
   return (
     <nav className="bg-white border-gray-400 border-b dark:border-zinc-900 dark:bg-black">
       <div className="flex flex-wrap items-center justify-between mx-auto md:px-4 px-2 py-2">
@@ -148,7 +148,7 @@ function NavBar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }
 
-export default NavBar;
+export default NavBar

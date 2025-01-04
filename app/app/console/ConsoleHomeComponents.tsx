@@ -1,28 +1,28 @@
-"use client";
+"use client"
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  TableRow
+} from "@/components/ui/table"
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
-import ContainerStatusBadge from "@/components/ContainerStatusBadge";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { DEFAULT_VPC_NAME } from "@/lib/vars";
-import axios from "axios";
+  SelectValue
+} from "@/components/ui/select"
+import Link from "next/link"
+import { Separator } from "@/components/ui/separator"
+import Image from "next/image"
+import ContainerStatusBadge from "@/components/ContainerStatusBadge"
+import { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
+import { DEFAULT_VPC_NAME } from "@/lib/vars"
+import axios from "axios"
 
 export function ConsoleOptions() {
   return (
@@ -84,47 +84,47 @@ export function ConsoleOptions() {
         </Link> */}
       </div>
     </div>
-  );
+  )
 }
 
 export function ConsoleContainers({
-  vpcs,
+  vpcs
 }: {
   vpcs:
     | {
-        vpc_name: string;
-        id: string;
+        vpc_name: string
+        id: string
       }[]
-    | undefined;
+    | undefined
 }) {
   const [vpc, setVpc] = useState(() => {
-    return vpcs?.filter((vpc) => vpc.vpc_name === DEFAULT_VPC_NAME)[0]?.id;
-  });
-  const [vpcFetchLoading, setVpcFetchLoading] = useState(false);
+    return vpcs?.filter((vpc) => vpc.vpc_name === DEFAULT_VPC_NAME)[0]?.id
+  })
+  const [vpcFetchLoading, setVpcFetchLoading] = useState(false)
   const [container, setContainer] = useState<
     {
-      container_name: string;
-      container_nick_name: string;
-      container_ip: string;
+      container_name: string
+      container_nick_name: string
+      container_ip: string
     }[]
-  >([]);
+  >([])
   const DefaultVPCID = vpcs?.filter(
     (vpc) => vpc.vpc_name === DEFAULT_VPC_NAME
-  )[0]?.id;
+  )[0]?.id
   useEffect(() => {
     async function getContainers() {
-      setVpcFetchLoading(true);
+      setVpcFetchLoading(true)
       if (vpc) {
-        const res = await axios.get(`/api/v1/app/containers?vpc_id=${vpc}`);
-        const data = res.data;
-        setContainer(data);
+        const res = await axios.get(`/api/v1/app/containers?vpc_id=${vpc}`)
+        const data = res.data
+        setContainer(data)
       }
-      setVpcFetchLoading(false);
+      setVpcFetchLoading(false)
     }
     getContainers().then(() => {
-      console.log("Containers fetched");
-    });
-  }, [vpc]);
+      console.log("Containers fetched")
+    })
+  }, [vpc])
   return (
     <div className="rounded-xl border-2">
       <div className="text-xl border-b-2 ">
@@ -134,7 +134,7 @@ export function ConsoleContainers({
           <Select
             defaultValue={DefaultVPCID}
             onValueChange={(e) => {
-              setVpc(e);
+              setVpc(e)
             }}
           >
             <SelectTrigger className="w-[180px]">
@@ -188,5 +188,5 @@ export function ConsoleContainers({
         </Link>
       </div>
     </div>
-  );
+  )
 }

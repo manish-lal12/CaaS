@@ -1,6 +1,6 @@
-"use client";
-import { deleteSSHKey } from "@/app/actions/database";
-import { Button } from "@/components/ui/button";
+"use client"
+import { deleteSSHKey } from "@/app/actions/database"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -8,26 +8,26 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Loader2, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+  DialogTrigger
+} from "@/components/ui/dialog"
+import { Loader2, Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 function DeleteSSHKey({ id }: { id: string }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
   async function Deletesshkey() {
-    setLoading(true);
+    setLoading(true)
     const res = await deleteSSHKey({
-      id: id,
-    });
+      id: id
+    })
     if (res.success) {
-      router.refresh();
+      router.refresh()
     } else {
-      alert(res.message);
+      alert(res.message)
     }
-    setLoading(false);
+    setLoading(false)
   }
   return (
     <Dialog>
@@ -54,7 +54,7 @@ function DeleteSSHKey({ id }: { id: string }) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
-export default DeleteSSHKey;
+export default DeleteSSHKey

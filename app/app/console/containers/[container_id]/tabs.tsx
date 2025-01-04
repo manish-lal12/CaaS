@@ -1,15 +1,8 @@
-"use client";
-import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Play,
-  Pause,
-  RotateCcw,
-  Trash2,
-  Terminal,
-  Loader2,
-} from "lucide-react";
+"use client"
+import { toast } from "sonner"
+import { Separator } from "@/components/ui/separator"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Play, Pause, RotateCcw, Trash2, Terminal, Loader2 } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,28 +11,28 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog"
 
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import Link from "next/link";
-import InboundRulesRow from "./InboundRulesRow";
-import { AddInboundRule } from "./AddInboundRule";
-import { useParams, useRouter } from "next/navigation";
+  TableRow
+} from "@/components/ui/table"
+import Link from "next/link"
+import InboundRulesRow from "./InboundRulesRow"
+import { AddInboundRule } from "./AddInboundRule"
+import { useParams, useRouter } from "next/navigation"
 import {
   startContainer,
   restartContainer,
   stopContainer,
-  deleteContainer,
-} from "@/app/actions/infra";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+  deleteContainer
+} from "@/app/actions/infra"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 
 function ContainerDetailTabs({
   container_name,
@@ -48,96 +41,96 @@ function ContainerDetailTabs({
   image,
   ip_address,
   createdAt,
-  inbound_rules,
+  inbound_rules
 }: {
-  container_name: string;
-  nick_name: string;
-  node: string;
-  image: string;
-  ip_address: string;
-  createdAt: Date;
+  container_name: string
+  nick_name: string
+  node: string
+  image: string
+  ip_address: string
+  createdAt: Date
   inbound_rules: {
-    id: string;
-    config_name: string;
-    domain_name: string;
-    protocol: string;
-    container_ip: string;
-    port: number;
-  }[];
+    id: string
+    config_name: string
+    domain_name: string
+    protocol: string
+    container_ip: string
+    port: number
+  }[]
 }) {
-  const router = useRouter();
-  const [deleteContainerError, setDeleteContainerError] = useState("");
-  const params = useParams<{ container_id: string }>();
+  const router = useRouter()
+  const [deleteContainerError, setDeleteContainerError] = useState("")
+  const params = useParams<{ container_id: string }>()
   const [loading, setLoading] = useState({
     start: false,
     restart: false,
     stop: false,
-    delete: false,
-  });
+    delete: false
+  })
   async function StartContainer() {
     if (Object.values(loading).includes(true)) {
-      alert("Please wait for the previous action to complete");
+      alert("Please wait for the previous action to complete")
     } else {
-      setLoading((prev) => ({ ...prev, start: true }));
+      setLoading((prev) => ({ ...prev, start: true }))
       const res = await startContainer({
-        container_name: container_name,
-      });
+        container_name: container_name
+      })
       if (res.success) {
-        toast.success("Container started successfully", {});
+        toast.success("Container started successfully", {})
       } else {
-        toast.error("Failed to start container", {});
+        toast.error("Failed to start container", {})
       }
-      setLoading((prev) => ({ ...prev, start: false }));
+      setLoading((prev) => ({ ...prev, start: false }))
     }
   }
   async function ReStartContainer() {
     if (Object.values(loading).includes(true)) {
-      alert("Please wait for the previous action to complete");
+      alert("Please wait for the previous action to complete")
     } else {
-      setLoading((prev) => ({ ...prev, restart: true }));
+      setLoading((prev) => ({ ...prev, restart: true }))
       const res = await restartContainer({
-        container_name: container_name,
-      });
+        container_name: container_name
+      })
       if (res.success) {
-        toast.success("Container restarted successfully", {});
+        toast.success("Container restarted successfully", {})
       } else {
-        toast.error("Failed to restart container", {});
+        toast.error("Failed to restart container", {})
       }
-      setLoading((prev) => ({ ...prev, restart: false }));
+      setLoading((prev) => ({ ...prev, restart: false }))
     }
   }
   async function StopContainer() {
     if (Object.values(loading).includes(true)) {
-      alert("Please wait for the previous action to complete");
+      alert("Please wait for the previous action to complete")
     } else {
-      setLoading((prev) => ({ ...prev, stop: true }));
+      setLoading((prev) => ({ ...prev, stop: true }))
       const res = await stopContainer({
-        container_name: container_name,
-      });
+        container_name: container_name
+      })
       if (res.success) {
-        toast.success("Container stopped successfully", {});
+        toast.success("Container stopped successfully", {})
       } else {
-        toast.error("Failed to stop container", {});
+        toast.error("Failed to stop container", {})
       }
-      setLoading((prev) => ({ ...prev, stop: false }));
+      setLoading((prev) => ({ ...prev, stop: false }))
     }
   }
   async function DeleteContainer() {
     if (Object.values(loading).includes(true)) {
-      alert("Please wait for the previous action to complete");
+      alert("Please wait for the previous action to complete")
     } else {
-      setDeleteContainerError("");
-      setLoading((prev) => ({ ...prev, delete: true }));
+      setDeleteContainerError("")
+      setLoading((prev) => ({ ...prev, delete: true }))
       const res = await deleteContainer({
-        container_name: container_name,
-      });
+        container_name: container_name
+      })
       if (res.success) {
-        toast.success("Container deleted successfully", {});
-        router.push("/console/containers");
+        toast.success("Container deleted successfully", {})
+        router.push("/console/containers")
       } else {
-        setDeleteContainerError(res.message);
+        setDeleteContainerError(res.message)
       }
-      setLoading((prev) => ({ ...prev, delete: false }));
+      setLoading((prev) => ({ ...prev, delete: false }))
     }
   }
 
@@ -293,7 +286,7 @@ function ContainerDetailTabs({
                     domain_name: config.domain_name,
                     protocol: config.protocol,
                     container_ip: config.container_ip,
-                    port: config.port,
+                    port: config.port
                   }}
                 />
               ))}
@@ -302,7 +295,7 @@ function ContainerDetailTabs({
         </div>
       </TabsContent>
     </Tabs>
-  );
+  )
 }
 
-export default ContainerDetailTabs;
+export default ContainerDetailTabs

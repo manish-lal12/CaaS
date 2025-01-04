@@ -1,18 +1,18 @@
-import { TriangleAlert } from "lucide-react";
-import { CpuUsesChart } from "./charts/CpuUses";
-import { MemoryUsesChart } from "./charts/MemoryUses";
-import ContainerDetailTabs from "./tabs";
-import prisma from "@/lib/db";
+import { TriangleAlert } from "lucide-react"
+import { CpuUsesChart } from "./charts/CpuUses"
+import { MemoryUsesChart } from "./charts/MemoryUses"
+import ContainerDetailTabs from "./tabs"
+import prisma from "@/lib/db"
 async function ContainerDetail({
-  params,
+  params
 }: {
   params: {
-    container_id: string;
-  };
+    container_id: string
+  }
 }) {
   const container = await prisma.containers.findUnique({
     where: {
-      name: params.container_id,
+      name: params.container_id
     },
     include: {
       inbound_rules: {
@@ -22,11 +22,11 @@ async function ContainerDetail({
           domain_name: true,
           service_protocol: true,
           container_ip: true,
-          port: true,
-        },
-      },
-    },
-  });
+          port: true
+        }
+      }
+    }
+  })
   const inbound_rules = container?.inbound_rules.map((rule) => {
     return {
       id: rule.id,
@@ -34,14 +34,14 @@ async function ContainerDetail({
       domain_name: rule.domain_name,
       protocol: rule.service_protocol,
       container_ip: rule.container_ip,
-      port: rule.port,
-    };
-  });
+      port: rule.port
+    }
+  })
   return (
     <div
       style={{
         height: "calc(100vh - 65px)",
-        overflow: "auto",
+        overflow: "auto"
       }}
       className="p-4 space-y-6"
     >
@@ -75,7 +75,7 @@ async function ContainerDetail({
         />
       </div>
     </div>
-  );
+  )
 }
 
-export default ContainerDetail;
+export default ContainerDetail

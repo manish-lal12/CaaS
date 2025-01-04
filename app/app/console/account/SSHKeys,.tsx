@@ -1,16 +1,16 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import CreateNewSSHKeys from "./CreateNewSSHKEY";
-import { UseOwnSSHKeys } from "./ImportSSHKeys";
+  SheetTrigger
+} from "@/components/ui/sheet"
+import { Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import CreateNewSSHKeys from "./CreateNewSSHKEY"
+import { UseOwnSSHKeys } from "./ImportSSHKeys"
 function AddSSHKeys() {
   return (
     <Sheet>
@@ -38,7 +38,7 @@ function AddSSHKeys() {
         </Tabs>
       </SheetContent>
     </Sheet>
-  );
+  )
 }
 
-export default AddSSHKeys;
+export default AddSSHKeys

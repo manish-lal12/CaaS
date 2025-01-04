@@ -1,37 +1,37 @@
-"use client";
-import { SaveSSHKey } from "@/app/actions/database";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import SshPK from "sshpk";
+"use client"
+import { SaveSSHKey } from "@/app/actions/database"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import SshPK from "sshpk"
 
 export function UseOwnSSHKeys() {
-  const [keyName, setKeyName] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [keyName, setKeyName] = useState("")
+  const [loading, setLoading] = useState(false)
   const [fileContent, setFileContent] = useState<
     string | ArrayBuffer | null | undefined
-  >("");
-  const [error, setError] = useState("");
-  const route = useRouter();
+  >("")
+  const [error, setError] = useState("")
+  const route = useRouter()
   async function SubmitSSHKey() {
-    setLoading(true);
+    setLoading(true)
     const res = await SaveSSHKey({
       key_name: keyName,
-      private_key: fileContent as string,
-    });
+      private_key: fileContent as string
+    })
     if (!res.success) {
-      setError("Could not save key, Try Again");
+      setError("Could not save key, Try Again")
     } else {
-      setError("");
-      setFileContent("");
-      setKeyName("");
-      alert("Key Saved");
-      route.refresh();
+      setError("")
+      setFileContent("")
+      setKeyName("")
+      alert("Key Saved")
+      route.refresh()
     }
-    setLoading(false);
+    setLoading(false)
   }
   return (
     <form>
@@ -44,23 +44,23 @@ export function UseOwnSSHKeys() {
             id="ssh_key"
             type="file"
             onChange={(e) => {
-              const fileReader = new FileReader();
-              const { files } = e.target;
+              const fileReader = new FileReader()
+              const { files } = e.target
               if (files) {
-                fileReader.readAsText(files[0], "UTF-8");
+                fileReader.readAsText(files[0], "UTF-8")
                 fileReader.onload = (e) => {
-                  const content = e.target?.result;
+                  const content = e.target?.result
                   try {
-                    const key = SshPK.parseKey(content as string);
-                    console.log(key.type);
-                    setFileContent(content);
+                    const key = SshPK.parseKey(content as string)
+                    console.log(key.type)
+                    setFileContent(content)
                   } catch (e) {
-                    console.log(e);
-                    alert("Could not parse key");
+                    console.log(e)
+                    alert("Could not parse key")
                   }
-                };
+                }
               } else {
-                alert("Invalid File");
+                alert("Invalid File")
               }
             }}
           />
@@ -77,7 +77,7 @@ export function UseOwnSSHKeys() {
             type="text"
             value={keyName}
             onChange={(e) => {
-              setKeyName(e.target.value);
+              setKeyName(e.target.value)
             }}
           />
         </div>
@@ -99,5 +99,5 @@ export function UseOwnSSHKeys() {
         )}
       </div>
     </form>
-  );
+  )
 }

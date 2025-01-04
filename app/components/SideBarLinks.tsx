@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 // import {
 //   Accordion,
@@ -6,12 +6,12 @@
 //   AccordionItem,
 //   AccordionTrigger,
 // } from "@/components/ui/accordion@sidebar";
-import { CircleUserRoundIcon, Box, Network } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { CircleUserRoundIcon, Box, Network } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 function SideBarLinks() {
-  const path = usePathname().slice(1).split("/");
+  const path = usePathname().slice(1).split("/")
   return (
     <>
       <Link
@@ -80,7 +80,7 @@ function SideBarLinks() {
         </AccordionItem>
         </Accordion> */}
     </>
-  );
+  )
 }
 
-export default SideBarLinks;
+export default SideBarLinks

@@ -1,32 +1,32 @@
-import { auth } from "@/auth";
-import prisma from "@/lib/db";
-import { NextRequest } from "next/server";
-export const fetchCache = "force-no-store";
+import { auth } from "@/auth"
+import prisma from "@/lib/db"
+import { NextRequest } from "next/server"
+export const fetchCache = "force-no-store"
 
 export async function GET(request: NextRequest) {
-  const sesssion = await auth();
+  const sesssion = await auth()
   if (!sesssion) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
+    return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
-  const searchParams = request.nextUrl.searchParams;
-  const vpc_id = searchParams.get("vpc_id");
+  const searchParams = request.nextUrl.searchParams
+  const vpc_id = searchParams.get("vpc_id")
   const containers = await prisma.containers.findMany({
     where: {
       User: {
-        email: sesssion?.user?.email as string,
+        email: sesssion?.user?.email as string
       },
       vpc: {
-        id: vpc_id as string,
-      },
+        id: vpc_id as string
+      }
     },
     select: {
       name: true,
       nick_name: true,
       ip_address: true,
       node: true,
-      createdAt: true,
-    },
-  });
+      createdAt: true
+    }
+  })
   return Response.json(
     containers.map((container) => {
       return {
@@ -34,8 +34,8 @@ export async function GET(request: NextRequest) {
         container_nick_name: container.nick_name,
         container_ip: container.ip_address,
         node: container.node,
-        created_at: container.createdAt,
-      };
+        created_at: container.createdAt
+      }
     })
-  );
+  )
 }

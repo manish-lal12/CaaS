@@ -1,22 +1,22 @@
-import { Download } from "lucide-react";
+import { Download } from "lucide-react"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+  DialogTrigger
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 function DownloadSSHKeys({
   ssh_private_key,
   ssh_key_nick_name,
-  ssh_public_key,
+  ssh_public_key
 }: {
-  ssh_private_key: string;
-  ssh_key_nick_name: string;
-  ssh_public_key: string;
+  ssh_private_key: string
+  ssh_key_nick_name: string
+  ssh_public_key: string
 }) {
   return (
     <Dialog>
@@ -45,7 +45,7 @@ function DownloadSSHKeys({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
-export default DownloadSSHKeys;
+export default DownloadSSHKeys

@@ -1,26 +1,26 @@
-import { Separator } from "@/components/ui/separator";
-import prisma from "@/lib/db";
-import dynamic from "next/dynamic";
+import { Separator } from "@/components/ui/separator"
+import prisma from "@/lib/db"
+import dynamic from "next/dynamic"
 
 const TerminalComponent = dynamic(() => import("./terminal"), {
-  ssr: false,
-});
+  ssr: false
+})
 
 async function Terminal({
-  params,
+  params
 }: {
   params: {
-    container_id: string;
-  };
+    container_id: string
+  }
 }) {
   const container = await prisma.containers.findUnique({
     where: {
-      name: params.container_id,
+      name: params.container_id
     },
     include: {
-      vpc: true,
-    },
-  });
+      vpc: true
+    }
+  })
   return (
     <div>
       <div className="overflow-hidden rounded-sm">
@@ -36,7 +36,7 @@ async function Terminal({
         <Separator />
       </div>
     </div>
-  );
+  )
 }
 
-export default Terminal;
+export default Terminal

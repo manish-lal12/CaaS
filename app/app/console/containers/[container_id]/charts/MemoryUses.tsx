@@ -1,61 +1,61 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { Area, AreaChart, CartesianGrid } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client"
+import { useEffect, useState } from "react"
+import { useParams } from "next/navigation"
+import { Area, AreaChart, CartesianGrid } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+  ChartTooltipContent
+} from "@/components/ui/chart"
 
 type ramUsesData = {
-  RamUsedPercent: number;
-}[];
+  RamUsedPercent: number
+}[]
 
 export function MemoryUsesChart() {
-  const { container_id } = useParams();
-  const [ramUses, setRamUses] = useState<ramUsesData>([]);
+  const { container_id } = useParams()
+  const [ramUses, setRamUses] = useState<ramUsesData>([])
   useEffect(() => {
     const ws = new WebSocket(
       `/ws/metrics/container/?container_id=${container_id}`
-    );
+    )
 
     ws.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
-        console.log(data);
+        const data = JSON.parse(event.data)
+        console.log(data)
 
-        const memoryUsage = data.memory_usage_percentage;
+        const memoryUsage = data.memory_usage_percentage
         setRamUses((prev) => {
           if (prev.length < 30) {
             return [
               ...prev,
               {
-                RamUsedPercent: memoryUsage,
-              },
-            ];
+                RamUsedPercent: memoryUsage
+              }
+            ]
           } else {
-            const array = prev.slice(1);
-            array.push({ RamUsedPercent: memoryUsage });
-            return array;
+            const array = prev.slice(1)
+            array.push({ RamUsedPercent: memoryUsage })
+            return array
           }
-        });
+        })
         ws.onerror = (error) => {
-          console.log("Websocket error", error);
-        };
+          console.log("Websocket error", error)
+        }
         ws.onclose = () => {
-          console.log("Websocket connection closed");
-        };
+          console.log("Websocket connection closed")
+        }
         return () => {
-          ws.close();
-        };
+          ws.close()
+        }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    };
-  }, [container_id]);
+    }
+  }, [container_id])
 
   return (
     <Card className="w-full ">
@@ -68,8 +68,8 @@ export function MemoryUsesChart() {
             {
               RamUsedPercent: {
                 label: "RAM Used %",
-                color: "hsl(var(--chart-2))",
-              },
+                color: "hsl(var(--chart-2))"
+              }
             } satisfies ChartConfig
           }
         >
@@ -91,5 +91,5 @@ export function MemoryUsesChart() {
         </ChartContainer>
       </CardContent>
     </Card>
-  );
+  )
 }

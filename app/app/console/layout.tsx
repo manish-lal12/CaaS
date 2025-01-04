@@ -1,6 +1,6 @@
-import SideBar from "@/components/SideBar";
-import NavBar from "@/components/ui/NavBar";
-import WelcomeCheckPipe from "../pipes/WelcomeCheckPipe";
+import SideBar from "@/components/SideBar"
+import NavBar from "@/components/ui/NavBar"
+import WelcomeCheckPipe from "../pipes/WelcomeCheckPipe"
 
 function ConsoleLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +13,7 @@ function ConsoleLayout({ children }: { children: React.ReactNode }) {
         </div>
       </WelcomeCheckPipe>
     </>
-  );
+  )
 }
 
-export default ConsoleLayout;
+export default ConsoleLayout

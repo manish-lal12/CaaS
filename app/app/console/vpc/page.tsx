@@ -1,12 +1,12 @@
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit } from "lucide-react"
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  TableRow
+} from "@/components/ui/table"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -15,20 +15,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog"
 
-import AddVpc from "./AddVpc";
-import EditVpc from "./EditVpc";
-import VPCDeleteButton from "./action";
-import { auth } from "@/auth";
-import prisma from "@/lib/db";
+import AddVpc from "./AddVpc"
+import EditVpc from "./EditVpc"
+import VPCDeleteButton from "./action"
+import { auth } from "@/auth"
+import prisma from "@/lib/db"
 
 async function VpcPage() {
-  const session = await auth();
+  const session = await auth()
   const user = await prisma.user.findUnique({
     where: {
-      email: session?.user?.email as string,
+      email: session?.user?.email as string
     },
     include: {
       vpc: {
@@ -36,15 +36,15 @@ async function VpcPage() {
           id: true,
           vpc_name: true,
           cidr: true,
-          gateway: true,
-        },
-      },
-    },
-  });
+          gateway: true
+        }
+      }
+    }
+  })
 
-  let vpcs = user?.vpc || [];
-  vpcs = vpcs.filter((vpc) => vpc.vpc_name !== "Default");
-  const defaultVPC = user?.vpc.find((vpc) => vpc.vpc_name === "Default");
+  let vpcs = user?.vpc || []
+  vpcs = vpcs.filter((vpc) => vpc.vpc_name !== "Default")
+  const defaultVPC = user?.vpc.find((vpc) => vpc.vpc_name === "Default")
   return (
     <div className="m-2 md:m-6 space-y-2 md:space-y-4">
       <div className="flex justify-between items-center">
@@ -104,7 +104,7 @@ async function VpcPage() {
         </Table>
       </div>
     </div>
-  );
+  )
 }
 
-export default VpcPage;
+export default VpcPage

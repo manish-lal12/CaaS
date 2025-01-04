@@ -1,7 +1,7 @@
-import { TriangleAlert } from "lucide-react";
-import { auth } from "@/auth";
-import prisma from "@/lib/db";
-import { LogoutButton } from "@/components/LoginLogoutButton";
+import { TriangleAlert } from "lucide-react"
+import { auth } from "@/auth"
+import prisma from "@/lib/db"
+import { LogoutButton } from "@/components/LoginLogoutButton"
 
 import {
   Table,
@@ -9,17 +9,17 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import DeleteSSHKey from "./DeleteSSHKey";
-import AddSSHKeys from "./SSHKeys,";
-import DownloadSSHKeys from "./DownloadSSHKey";
+  TableRow
+} from "@/components/ui/table"
+import DeleteSSHKey from "./DeleteSSHKey"
+import AddSSHKeys from "./SSHKeys,"
+import DownloadSSHKeys from "./DownloadSSHKey"
 
 async function Profile() {
-  const session = await auth();
+  const session = await auth()
   const user = await prisma.user.findUnique({
     where: {
-      email: session?.user?.email as string,
+      email: session?.user?.email as string
     },
     include: {
       ssh_keys: {
@@ -27,11 +27,11 @@ async function Profile() {
           nick_name: true,
           id: true,
           private_key: true,
-          public_key: true,
-        },
-      },
-    },
-  });
+          public_key: true
+        }
+      }
+    }
+  })
   return (
     <div className="md:m-6 m-2 md:space-y-4 space-y-2">
       <div className="flex items-center gap-6 border-2 rounded-lg p-4 text-sm text-yellow-400">
@@ -136,7 +136,7 @@ async function Profile() {
         Delete Account
       </div> */}
     </div>
-  );
+  )
 }
 
-export default Profile;
+export default Profile

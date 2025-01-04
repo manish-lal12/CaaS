@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef } from "react"
 
-import { cn } from "@/lib/utils";
-import { AnimatedBeam } from "./ui/animated-beam";
+import { cn } from "@/lib/utils"
+import { AnimatedBeam } from "./ui/animated-beam"
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -19,24 +19,24 @@ const Circle = forwardRef<
     >
       {children}
     </div>
-  );
-});
+  )
+})
 
-Circle.displayName = "Circle";
+Circle.displayName = "Circle"
 
 export function AnimatedBeamMultipleOutputDemo({
-  className,
+  className
 }: {
-  className?: string;
+  className?: string
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const div1Ref = useRef<HTMLDivElement>(null);
-  const div2Ref = useRef<HTMLDivElement>(null);
-  const div3Ref = useRef<HTMLDivElement>(null);
-  const div4Ref = useRef<HTMLDivElement>(null);
-  const div5Ref = useRef<HTMLDivElement>(null);
-  const div6Ref = useRef<HTMLDivElement>(null);
-  const div7Ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null)
+  const div1Ref = useRef<HTMLDivElement>(null)
+  const div2Ref = useRef<HTMLDivElement>(null)
+  const div3Ref = useRef<HTMLDivElement>(null)
+  const div4Ref = useRef<HTMLDivElement>(null)
+  const div5Ref = useRef<HTMLDivElement>(null)
+  const div6Ref = useRef<HTMLDivElement>(null)
+  const div7Ref = useRef<HTMLDivElement>(null)
 
   return (
     <div
@@ -115,7 +115,7 @@ export function AnimatedBeamMultipleOutputDemo({
         duration={3}
       />
     </div>
-  );
+  )
 }
 
 const Icons = {
@@ -140,7 +140,7 @@ const Icons = {
           fill: "#20c2ef",
           stroke: "#394d54",
           strokeWidth: 3,
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -149,7 +149,7 @@ const Icons = {
         style={{
           fill: "#20c2ef",
           stroke: "#394d54",
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -158,7 +158,7 @@ const Icons = {
         style={{
           fill: "#20c2ef",
           stroke: "#394d54",
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -177,7 +177,7 @@ const Icons = {
         style={{
           fill: "#0eacd1",
           stroke: "#394d54",
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -187,7 +187,7 @@ const Icons = {
           fill: "#0eacd1",
           stroke: "#394d54",
           strokeWidth: 0.5,
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -197,7 +197,7 @@ const Icons = {
           fill: "#0eacd1",
           stroke: "#394d54",
           strokeWidth: 0.5,
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -207,7 +207,7 @@ const Icons = {
           fill: "#0eacd1",
           stroke: "#394d54",
           strokeWidth: 0.5,
-          strokeLinejoin: "round",
+          strokeLinejoin: "round"
         }}
       />
       <polygon
@@ -624,5 +624,5 @@ const Icons = {
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
     </svg>
-  ),
-};
+  )
+}

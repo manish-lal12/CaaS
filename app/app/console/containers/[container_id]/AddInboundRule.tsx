@@ -1,7 +1,7 @@
-import { createInboundRule } from "@/app/actions/infra";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { createInboundRule } from "@/app/actions/infra"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Sheet,
   SheetClose,
@@ -10,44 +10,44 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { add_inbound_rule_schema } from "@/lib/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+  SheetTrigger
+} from "@/components/ui/sheet"
+import { add_inbound_rule_schema } from "@/lib/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
 export function AddInboundRule({ container_name }: { container_name: string }) {
-  const router = useRouter();
-  type AddInboundRuleSchema = z.infer<typeof add_inbound_rule_schema>;
+  const router = useRouter()
+  type AddInboundRuleSchema = z.infer<typeof add_inbound_rule_schema>
   const {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting, isValid, errors },
+    formState: { isSubmitting, isValid, errors }
   } = useForm<AddInboundRuleSchema>({
     resolver: zodResolver(add_inbound_rule_schema),
-    mode: "onBlur",
-  });
+    mode: "onBlur"
+  })
   const onSubmit: SubmitHandler<AddInboundRuleSchema> = async (FormData) => {
     const res = await createInboundRule({
       config_name: FormData.rule_name,
       domain_name: FormData.domain_name,
       container_port: FormData.port,
-      container_name: container_name,
-    });
+      container_name: container_name
+    })
     if (res.success) {
-      router.refresh();
-      toast.success("Inbound rule added successfully");
-      reset();
-      alert("Inbound rule added successfully");
+      router.refresh()
+      toast.success("Inbound rule added successfully")
+      reset()
+      alert("Inbound rule added successfully")
     } else {
-      toast.error(res.message);
+      toast.error(res.message)
     }
-  };
+  }
 
   return (
     <Sheet>
@@ -106,7 +106,7 @@ export function AddInboundRule({ container_name }: { container_name: string }) {
                   id=""
                   className="col-span-3"
                   {...register("port", {
-                    valueAsNumber: true,
+                    valueAsNumber: true
                   })}
                 />
               </div>
@@ -138,5 +138,5 @@ export function AddInboundRule({ container_name }: { container_name: string }) {
         </form>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

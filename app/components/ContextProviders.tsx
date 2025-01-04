@@ -1,5 +1,5 @@
-"use client";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+"use client"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
 export function ContextProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -12,5 +12,5 @@ export function ContextProvider({ children }: { children: React.ReactNode }) {
         {children}
       </NextThemesProvider>
     </>
-  );
+  )
 }

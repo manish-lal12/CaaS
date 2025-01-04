@@ -1,61 +1,61 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { Area, AreaChart, CartesianGrid } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client"
+import { useState, useEffect } from "react"
+import { useParams } from "next/navigation"
+import { Area, AreaChart, CartesianGrid } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+  ChartTooltipContent
+} from "@/components/ui/chart"
 
 type cpuUsesData = {
-  CpuUsesPercent: number;
-}[];
+  CpuUsesPercent: number
+}[]
 
 export function CpuUsesChart() {
-  const { container_id } = useParams();
-  const [cpuUses, setCpuUses] = useState<cpuUsesData>([]);
+  const { container_id } = useParams()
+  const [cpuUses, setCpuUses] = useState<cpuUsesData>([])
   useEffect(() => {
     const ws = new WebSocket(
       `/ws/metrics/container/?container_id=${container_id}`
-    );
+    )
     ws.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
-        console.log(data);
+        const data = JSON.parse(event.data)
+        console.log(data)
         // endpoint returns null data initially
         const cpuUsage =
-          data.cpu_usage_percentage === null ? 0 : data.cpu_usage_percentage;
+          data.cpu_usage_percentage === null ? 0 : data.cpu_usage_percentage
         setCpuUses((prev) => {
           if (prev.length < 30) {
             return [
               ...prev,
               {
-                CpuUsesPercent: cpuUsage,
-              },
-            ];
+                CpuUsesPercent: cpuUsage
+              }
+            ]
           } else {
-            const array = prev.slice(1);
-            array.push({ CpuUsesPercent: cpuUsage });
-            return array;
+            const array = prev.slice(1)
+            array.push({ CpuUsesPercent: cpuUsage })
+            return array
           }
-        });
+        })
         ws.onerror = (error) => {
-          console.log("Websocket error:", error);
-        };
+          console.log("Websocket error:", error)
+        }
         ws.onclose = () => {
-          console.log("Websocket connection closed");
-        };
+          console.log("Websocket connection closed")
+        }
         return () => {
-          ws.close();
-        };
+          ws.close()
+        }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    };
-  }, [container_id]);
+    }
+  }, [container_id])
 
   return (
     <Card className="w-full ">
@@ -68,8 +68,8 @@ export function CpuUsesChart() {
             {
               CpuUsesPercent: {
                 label: "CPU Used %",
-                color: "hsl(var(--chart-4))",
-              },
+                color: "hsl(var(--chart-4))"
+              }
             } satisfies ChartConfig
           }
         >
@@ -92,5 +92,5 @@ export function CpuUsesChart() {
         </ChartContainer>
       </CardContent>
     </Card>
-  );
+  )
 }

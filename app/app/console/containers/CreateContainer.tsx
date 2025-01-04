@@ -1,5 +1,5 @@
-"use client";
-import { Button } from "@/components/ui/button";
+"use client"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -7,38 +7,38 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DialogTrigger
+} from "@/components/ui/dialog"
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { container_create_schema } from "@/lib/zod";
-import { Loader2 } from "lucide-react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { z } from "zod";
-import { createContainer } from "@/app/actions/infra";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { DEFAULT_VPC_NAME } from "@/lib/vars";
-import Link from "next/link";
+  SelectValue
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { container_create_schema } from "@/lib/zod"
+import { Loader2 } from "lucide-react"
+import { useForm, SubmitHandler, Controller } from "react-hook-form"
+import { z } from "zod"
+import { createContainer } from "@/app/actions/infra"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { DEFAULT_VPC_NAME } from "@/lib/vars"
+import Link from "next/link"
 
 export function CreateContainer({
   vpcs,
-  ssh_keys,
+  ssh_keys
 }: {
-  vpcs: { id: string; vpc_name: string }[] | undefined;
-  ssh_keys: { id: string; nick_name: string }[] | undefined;
+  vpcs: { id: string; vpc_name: string }[] | undefined
+  ssh_keys: { id: string; nick_name: string }[] | undefined
 }) {
-  const router = useRouter();
-  type ContainerCreationSchema = z.infer<typeof container_create_schema>;
+  const router = useRouter()
+  type ContainerCreationSchema = z.infer<typeof container_create_schema>
   const {
     register,
     handleSubmit,
@@ -47,36 +47,36 @@ export function CreateContainer({
     control,
     reset,
     trigger,
-    formState: { isSubmitting, isValid, errors },
+    formState: { isSubmitting, isValid, errors }
   } = useForm<ContainerCreationSchema>({
     resolver: zodResolver(container_create_schema),
     mode: "onChange",
     defaultValues: {
-      vpc_id: vpcs?.filter((item) => item.vpc_name === DEFAULT_VPC_NAME)[0].id,
-    },
-  });
+      vpc_id: vpcs?.filter((item) => item.vpc_name === DEFAULT_VPC_NAME)[0].id
+    }
+  })
 
-  const UserVPCs = vpcs;
+  const UserVPCs = vpcs
   const defaultVPCID = UserVPCs?.filter(
     (item) => item.vpc_name === DEFAULT_VPC_NAME
-  )[0].id;
+  )[0].id
 
   const onSubmit: SubmitHandler<ContainerCreationSchema> = async (FormData) => {
     const res = await createContainer({
       container_name: FormData.container_name,
       vpc_id: FormData.vpc_id,
-      ssh_key_id: FormData.ssh_key_id,
-    });
+      ssh_key_id: FormData.ssh_key_id
+    })
     if (res.success) {
-      toast.success("Container created successfully");
-      reset();
-      router.refresh();
+      toast.success("Container created successfully")
+      reset()
+      router.refresh()
     } else {
-      console.log(res.message);
-      toast.error("Failed to create container, Try again");
-      alert("Failed to create container, Try again");
+      console.log(res.message)
+      toast.error("Failed to create container, Try again")
+      alert("Failed to create container, Try again")
     }
-  };
+  }
 
   return (
     <Dialog>
@@ -115,8 +115,8 @@ export function CreateContainer({
                 render={() => (
                   <Select
                     onValueChange={(e) => {
-                      setValue("vpc_id", e);
-                      clearErrors("vpc_id");
+                      setValue("vpc_id", e)
+                      clearErrors("vpc_id")
                     }}
                     defaultValue={defaultVPCID}
                   >
@@ -149,9 +149,9 @@ export function CreateContainer({
                 render={() => (
                   <Select
                     onValueChange={(e) => {
-                      setValue("ssh_key_id", e);
-                      clearErrors("ssh_key_id");
-                      trigger("ssh_key_id");
+                      setValue("ssh_key_id", e)
+                      clearErrors("ssh_key_id")
+                      trigger("ssh_key_id")
                     }}
                     disabled={ssh_keys?.length === 0}
                   >
@@ -165,7 +165,7 @@ export function CreateContainer({
                             <SelectItem key={sshkey.id} value={sshkey.id}>
                               {sshkey.nick_name}
                             </SelectItem>
-                          );
+                          )
                         })}
                       </SelectGroup>
                     </SelectContent>
@@ -199,5 +199,5 @@ export function CreateContainer({
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

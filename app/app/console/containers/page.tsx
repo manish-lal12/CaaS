@@ -1,40 +1,40 @@
-import { CreateContainer } from "./CreateContainer";
-import { auth } from "@/auth";
-import prisma from "@/lib/db";
-import ContainerTable from "./ContainerTable";
+import { CreateContainer } from "./CreateContainer"
+import { auth } from "@/auth"
+import prisma from "@/lib/db"
+import ContainerTable from "./ContainerTable"
 async function ContainersPage() {
-  const session = await auth();
+  const session = await auth()
   const user_vpc = await prisma.vpc.findMany({
     where: {
       User: {
-        email: session?.user?.email as string,
-      },
+        email: session?.user?.email as string
+      }
     },
     select: {
       id: true,
-      vpc_name: true,
-    },
-  });
+      vpc_name: true
+    }
+  })
 
   const user = await prisma.user.findUnique({
     where: {
-      email: session?.user?.email as string,
+      email: session?.user?.email as string
     },
     select: {
       vpc: {
         select: {
           id: true,
-          vpc_name: true,
-        },
+          vpc_name: true
+        }
       },
       ssh_keys: {
         select: {
           id: true,
-          nick_name: true,
-        },
-      },
-    },
-  });
+          nick_name: true
+        }
+      }
+    }
+  })
 
   return (
     <div
@@ -51,7 +51,7 @@ async function ContainersPage() {
         <ContainerTable vpcs={user_vpc} />
       </div>
     </div>
-  );
+  )
 }
 
-export default ContainersPage;
+export default ContainersPage
