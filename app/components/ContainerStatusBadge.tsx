@@ -8,9 +8,7 @@ function ContainerStatusBadge({ container_name }: { container_name: string }) {
   const [status, setStatus] = useState("fetching");
   useEffect(() => {
     axios
-      .get(
-        `http://localhost:5000/metrics/container/status?container_id=${container_name}`
-      )
+      .get(`/ws/metrics/container/status?container_id=${container_name}`)
       .then((res) => {
         setStatus(() => {
           return res.data.state === true ? "running" : "stopped";

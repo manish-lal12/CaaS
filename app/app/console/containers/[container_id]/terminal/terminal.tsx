@@ -15,9 +15,7 @@ function TermComp() {
     const fitAddon = new FitAddon();
     let ws: WebSocket;
     if (termRef.current) {
-      ws = new WebSocket(
-        `http://localhost:5000/terminal?container_id=${container_id}`
-      );
+      ws = new WebSocket(`/ws/terminal?container_id=${container_id}`);
       term.open(termRef.current);
       const attachAddon = new AttachAddon(ws);
       term.loadAddon(attachAddon);

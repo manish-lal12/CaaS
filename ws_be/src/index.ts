@@ -12,7 +12,7 @@ app.use(cors());
 app.get("/", (req: Request, res: Response) => {
   res.send("CaaS WebSocket Backend");
 });
-app.get("/metrics/container/status", async (req, res) => {
+app.get("/ws/metrics/container/status", async (req, res) => {
   try {
     const { container_id } = req.query;
     const containerStatusResponse = await axios({
@@ -40,14 +40,15 @@ mainServer.on("upgrade", function upgrade(request, socket, head) {
   // socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
   // socket.destroy();
   // return;
+
   const pathname = request.url;
   console.log(pathname);
 
-  if (pathname?.startsWith("/terminal")) {
+  if (pathname?.startsWith("/ws/terminal")) {
     terminal_wss.handleUpgrade(request, socket, head, function (ws) {
       terminal_wss.emit("connection", ws, request);
     });
-  } else if (pathname?.startsWith("/metrics")) {
+  } else if (pathname?.startsWith("/ws/metrics")) {
     metrics_wss.handleUpgrade(request, socket, head, function (ws) {
       metrics_wss.emit("connection", ws, request);
     });

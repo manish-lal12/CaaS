@@ -19,7 +19,7 @@ export function CpuUsesChart() {
   const [cpuUses, setCpuUses] = useState<cpuUsesData>([]);
   useEffect(() => {
     const ws = new WebSocket(
-      `http://localhost:5000/metrics/container/?container_id=${container_id}`
+      `/ws/metrics/container/?container_id=${container_id}`
     );
     ws.onmessage = (event) => {
       try {
