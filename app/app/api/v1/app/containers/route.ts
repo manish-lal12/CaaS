@@ -19,12 +19,12 @@ export async function GET(request: NextRequest) {
         id: vpc_id as string
       }
     },
-    select: {
-      name: true,
-      nick_name: true,
-      ip_address: true,
-      node: true,
-      createdAt: true
+    include: {
+      ssh_config: {
+        select: {
+          ssh_proxy_port: true
+        }
+      }
     }
   })
   return Response.json(
@@ -34,7 +34,8 @@ export async function GET(request: NextRequest) {
         container_nick_name: container.nick_name,
         container_ip: container.ip_address,
         node: container.node,
-        created_at: container.createdAt
+        created_at: container.createdAt,
+        ssh_port: container.ssh_config.ssh_proxy_port
       }
     })
   )

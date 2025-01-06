@@ -22,7 +22,7 @@ terminal_wss.on("connection", async (ws, req) => {
       ws.send(data.toString());
     });
     ws.on("message", (msg) => {
-      stream.write(msg);
+      stream.write(msg.toString());
     });
     ws.on("close", async () => {
       stream.write("exit\n");
