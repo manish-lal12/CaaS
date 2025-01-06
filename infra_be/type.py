@@ -86,6 +86,7 @@ class CreateSSHTunnelData(BaseModel):
     ssh_proxy_port: int
     container_ip: str
     node_name: str
+    ssh_tunnel_pid: int
 
 
 class CreateSSHTunnelReturnData(BaseModel):

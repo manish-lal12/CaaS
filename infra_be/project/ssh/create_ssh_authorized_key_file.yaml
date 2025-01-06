@@ -1,5 +1,6 @@
 - name: Ssh authorized_keys
   hosts: docker_host
+  gather_facts: false
   tasks:
     - name: Create directory for ssh keys
       ansible.builtin.file:

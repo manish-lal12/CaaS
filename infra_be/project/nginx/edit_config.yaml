@@ -1,5 +1,6 @@
 - name: Edit Nginx configuration
   hosts: docker_host
+  gather_facts: false
   tasks:
     - name: Delete existing nginx config
       ansible.builtin.file:

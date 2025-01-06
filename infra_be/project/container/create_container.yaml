@@ -1,5 +1,6 @@
 - name: Container
   hosts: docker_host
+  gather_facts: false
   tasks:
     - name: Create container
       community.docker.docker_container:

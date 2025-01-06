@@ -1,5 +1,6 @@
 - name: Docker Network
   hosts: docker_host
+  gather_facts: false
   tasks:
     - name: Get network info
       community.docker.docker_network_info:

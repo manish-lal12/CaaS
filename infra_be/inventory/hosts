@@ -2,4 +2,4 @@
 192.168.122.2 ansible_connection=ssh ansible_user=root ansible_ssh_private_key_file=/home/anish/.ssh/github_pri
 
 [ssh_proxy]
-127.0.0.1 ansible_connection=ssh ansible_user=anish ansible_ssh_private_key_file=/home/anish/.ssh/github_pri
+52.172.192.35 ansible_connection=ssh ansible_user=azureuser ansible_ssh_private_key_file=/home/anish/.ssh/baby_pri

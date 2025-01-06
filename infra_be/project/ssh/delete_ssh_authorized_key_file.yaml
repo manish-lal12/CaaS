@@ -1,5 +1,6 @@
 - name: Delete SSH authorized key file
   hosts: docker_host
+  gather_facts: false
   tasks:
     - name: Delete SSH authorized key file
       ansible.builtin.shell: >

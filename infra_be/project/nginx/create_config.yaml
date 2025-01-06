@@ -1,5 +1,6 @@
 - name: Nginx configuration
   hosts: docker_host
+  gather_facts: false
   tasks:
     - name: Create nginx configuration file
       ansible.builtin.template:

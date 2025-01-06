@@ -382,6 +382,7 @@ export async function createContainer({
         user_id: user?.id
       }
     )
+
     if (createContainerResponse.data.return_code !== 0) {
       return {
         success: false,
@@ -392,7 +393,8 @@ export async function createContainer({
     const sshTunnelResponse = await axios.post(INFRA_BE_URL + "/sshtunnel", {
       ssh_proxy_port: available_ssh_proxy_port?.ssh_proxy_port,
       container_ip: createContainerResponse.data.container_ip,
-      node_name: available_ssh_proxy_port?.ssh_proxy_node_name
+      node_name: available_ssh_proxy_port?.ssh_proxy_node_name,
+      ssh_tunnel_pid: 0
     })
 
     if (sshTunnelResponse.data.return_code !== 0) {
@@ -401,27 +403,15 @@ export async function createContainer({
         message: "error, Failed to create ssh tunnel"
       }
     }
-    try {
-      await prisma.available_ssh_proxy_ports.update({
-        where: {
-          id: available_ssh_proxy_port?.id as string
-        },
-        data: {
-          used: true
-        }
-      })
-    } catch (error) {
-      console.log(error)
-      await axios.delete(INFRA_BE_URL + "/sshtunnel", {
-        data: {
-          ssh_tunnel_pid: sshTunnelResponse.data.ssh_tunnel_pid
-        }
-      })
-      return {
-        success: false,
-        message: "error, database update failed"
+
+    await prisma.available_ssh_proxy_ports.update({
+      where: {
+        id: available_ssh_proxy_port?.id as string
+      },
+      data: {
+        used: true
       }
-    }
+    })
 
     const ssh_config = await prisma.ssh_config.create({
       data: {
