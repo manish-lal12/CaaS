@@ -73,13 +73,15 @@ export async function initializeUser({ username }: { username: string }) {
           used: true
         }
       })
+      const res_limit = await tx.resources_limit.create({})
       await prisma.user.update({
         where: {
           id: user?.id
         },
         data: {
           username: username,
-          welcomed: true
+          welcomed: true,
+          resources_limitId: res_limit.id
         }
       })
     })

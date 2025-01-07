@@ -339,8 +339,22 @@ export async function createContainer({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        resources_limit: true,
+        containers: true
       }
     })
+
+    if (
+      (user?.containers.length as number) >=
+      (user?.resources_limit.container_limit as number)
+    ) {
+      return {
+        success: false,
+        message: "Error, Container limit reached"
+      }
+    }
 
     const available_ssh_proxy_port =
       await prisma.available_ssh_proxy_ports.findFirst({
