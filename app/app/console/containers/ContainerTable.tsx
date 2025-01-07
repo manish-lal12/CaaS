@@ -149,7 +149,7 @@ function ContainerTable({
                     </TableCell>
                     <TableCell className="text-right flex justify-end items-center">
                       <Dialog>
-                        <DialogTrigger className="flex items-center space-x-2 hover:bg-zinc-600 p-1 rounded-lg hover:text-black">
+                        <DialogTrigger className="flex items-center space-x-2 hover:bg-zinc-600 p-1 rounded-lg ">
                           <div>SSH</div>
                           <Image
                             src={"https://static.aaraz.me/caas/ssh.png"}
@@ -159,7 +159,7 @@ function ContainerTable({
                             className="w-6"
                           />
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="md:w-fit">
                           <DialogHeader>
                             <DialogTitle className="md:text-2xl text-left">
                               Instruction for ssh !
@@ -171,7 +171,7 @@ function ContainerTable({
                           <div className="md:text-xl font-bold">
                             1. changing permission of the key file
                           </div>
-                          <div className="flex justify-between items-center bg-black text-white md:p-4 p-2 rounded-lg font-mono text-sm dark:bg-gray-900">
+                          <div className="flex justify-between md:gap-6 items-center bg-black text-white md:p-4 p-2 rounded-lg font-mono text-sm dark:bg-zinc-900">
                             <pre>
                               <code>chmod 600 path/to/your/keyfile.pem</code>
                             </pre>
@@ -188,7 +188,7 @@ function ContainerTable({
                           <div className="md:text-xl font-bold">
                             2. SSH into the container
                           </div>
-                          <div className="flex justify-between items-center bg-black text-white md:p-4 p-2 rounded-lg font-mono text-sm dark:bg-gray-900">
+                          <div className="flex justify-between md:gap-6 items-center bg-black text-white md:p-4 p-2 rounded-lg font-mono text-sm dark:bg-zinc-900">
                             <pre>
                               <code className="text-wrap">
                                 ssh root@52.172.192.35 -p {detail.ssh_port}{" "}

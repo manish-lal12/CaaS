@@ -18,6 +18,9 @@ function DownloadSSHKeys({
   ssh_key_nick_name: string
   ssh_public_key: string
 }) {
+  // This done this way to add new line character at the end of the key
+  ssh_private_key = `${ssh_private_key}
+  `
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -29,7 +32,7 @@ function DownloadSSHKeys({
         </DialogHeader>
         <DialogFooter className="grid grid-cols-2">
           <a
-            href={`data:text/plain;charset=utf-8,${ssh_private_key}`}
+            href={`data:text/plain;charset=utf-8,${encodeURIComponent(ssh_private_key)}`}
             download={`${ssh_key_nick_name}_private.key`}
           >
             <Button size={"sm"}>Private Key</Button>
