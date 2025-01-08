@@ -15,17 +15,23 @@ datasource db {
 
 model User {
   // For AUTH
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  UserData      UserData?
+}
+
+model UserData {
   id                String          @id @default(cuid())
-  name              String
-  email             String          @unique
-  emailVerified     DateTime?
-  image             String?
-  accounts          Account[]
-  sessions          Session[]
-  Authenticator     Authenticator[]
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  // For app
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String          @unique
   username          String?
   welcomed          Boolean         @default(false)
   vpc               vpc[]
@@ -33,7 +39,7 @@ model User {
   containers        containers[]
   ssh_config        ssh_config[]
   ssh_keys          ssh_keys[]
-  resources_limit   resources_limit @relation(fields: [resources_limitId], references: [id])
+  resources_limit   resources_limit @relation(fields: [resources_limitId], references: [id], onDelete: Cascade)
   resources_limitId String          @unique
 }
 
@@ -102,8 +108,8 @@ model vpc {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   containers      containers[]
-  User            User          @relation(fields: [userId], references: [id])
-  userId          String
+  UserData        UserData      @relation(fields: [UserDataId], references: [id])
+  UserDataId      String
   available_vpc   available_vpc @relation(fields: [available_vpcId], references: [id], onDelete: Cascade)
   available_vpcId String        @unique
 }
@@ -126,8 +132,8 @@ model containers {
   vpcId         String
   ip_address    String
   inbound_rules inbound_rules[]
-  User          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
+  UserData      UserData        @relation(fields: [UserDataId], references: [id], onDelete: Cascade)
+  UserDataId    String
   ssh_config    ssh_config      @relation(fields: [ssh_config_id], references: [id], onDelete: Cascade)
   ssh_config_id String          @unique
   ssh_keys      ssh_keys        @relation(fields: [ssh_keysId], references: [id])
@@ -144,8 +150,8 @@ model inbound_rules {
   port                 Int
   createdAt            DateTime   @default(now())
   updatedAt            DateTime   @updatedAt
-  User                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId               String
+  UserData             UserData   @relation(fields: [UserDataId], references: [id], onDelete: Cascade)
+  UserDataId           String
   containers           containers @relation(fields: [containersName], references: [name], onDelete: Cascade)
   containersName       String
   cloudflare_zone      String
@@ -169,8 +175,8 @@ model ssh_config {
   ssh_tunnel_process_id       Int
   createdAt                   DateTime                  @default(now())
   updatedAt                   DateTime                  @updatedAt
-  User                        User                      @relation(fields: [userId], references: [id])
-  userId                      String
+  UserData                    UserData                  @relation(fields: [UserDataId], references: [id])
+  UserDataId                  String
   containers                  containers?
   available_ssh_proxy_ports   available_ssh_proxy_ports @relation(fields: [available_ssh_proxy_portsId], references: [id], onDelete: Cascade)
   available_ssh_proxy_portsId String                    @unique
@@ -191,18 +197,18 @@ model ssh_keys {
   private_key String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  User        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+  UserData    UserData     @relation(fields: [UserDataId], references: [id], onDelete: Cascade)
+  UserDataId  String
   containers  containers[]
 }
 
 model resources_limit {
-  id                 String @id @default(cuid())
-  vpc_limit          Int    @default(2)
-  container_limit    Int    @default(2)
-  ssh_key_limit      Int    @default(2)
-  inbound_rule_limit Int    @default(5)
-  User               User?
+  id                 String    @id @default(cuid())
+  vpc_limit          Int       @default(2)
+  container_limit    Int       @default(2)
+  ssh_key_limit      Int       @default(2)
+  inbound_rule_limit Int       @default(5)
+  UserData           UserData?
 }
 
 // model available_node {

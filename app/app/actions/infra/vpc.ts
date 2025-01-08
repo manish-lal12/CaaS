@@ -43,9 +43,11 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
-    const userId = user?.id
     await prisma.$transaction(async (tx) => {
       await tx.vpc.create({
         data: {
@@ -55,7 +57,7 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
           network: availableVPC?.network as string,
           cidr: availableVPC?.cidr as string,
           gateway: availableVPC?.gateway as string,
-          userId: userId as string,
+          UserDataId: user?.UserData?.id as string,
           available_vpcId: availableVPC?.id as string
         }
       })
@@ -104,12 +106,18 @@ export async function editVPC({
           .join(", ")}`
       }
     }
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail
+      },
+      include: {
+        UserData: true
+      }
+    })
     await prisma.vpc.update({
       where: {
         id: vpc_id,
-        User: {
-          email: userEmail
-        }
+        UserDataId: user?.UserData?.id as string
       },
       data: {
         vpc_name: vpc_name
@@ -133,12 +141,18 @@ export async function deleteVPC({ vpc_id }: { vpc_id: string }) {
   const session = await auth()
   const userEmail = session?.user?.email as string
   try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail
+      },
+      include: {
+        UserData: true
+      }
+    })
     const vpc = await prisma.vpc.findFirst({
       where: {
         id: vpc_id,
-        User: {
-          email: userEmail
-        }
+        UserDataId: user?.UserData?.id as string
       },
       include: {
         containers: true,

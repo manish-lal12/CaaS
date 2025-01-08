@@ -9,10 +9,14 @@ async function ConsolePage() {
       email: session?.user?.email as string
     },
     include: {
-      vpc: {
+      UserData: {
         select: {
-          vpc_name: true,
-          id: true
+          vpc: {
+            select: {
+              id: true,
+              vpc_name: true
+            }
+          }
         }
       }
     }
@@ -26,7 +30,7 @@ async function ConsolePage() {
         </div>
         <div className="md:grid grid-cols-2 gap-4">
           <ConsoleOptions />
-          <ConsoleContainers vpcs={user?.vpc} />
+          <ConsoleContainers vpcs={user?.UserData?.vpc} />
         </div>
       </div>
     </>

@@ -7,9 +7,12 @@ async function WelcomeCheckPipe({ children }: { children: React.ReactNode }) {
   const user = await prisma.user.findUnique({
     where: {
       email: session?.user?.email as string
+    },
+    include: {
+      UserData: true
     }
   })
-  if (!user?.welcomed) {
+  if (!user?.UserData?.welcomed) {
     permanentRedirect("/welcome")
   }
   return <>{children}</>

@@ -10,11 +10,17 @@ export async function GET(request: NextRequest) {
   }
   const searchParams = request.nextUrl.searchParams
   const vpc_id = searchParams.get("vpc_id")
+  const user = await prisma.user.findUnique({
+    where: {
+      email: sesssion?.user?.email as string
+    },
+    include: {
+      UserData: true
+    }
+  })
   const containers = await prisma.containers.findMany({
     where: {
-      User: {
-        email: sesssion?.user?.email as string
-      },
+      UserDataId: user?.UserData?.id as string,
       vpc: {
         id: vpc_id as string
       }

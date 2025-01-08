@@ -40,6 +40,9 @@ export async function createInboundRule({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
 
@@ -80,7 +83,7 @@ export async function createInboundRule({
         service_protocol: "http",
         container_ip: container?.ip_address as string,
         port: container_port,
-        userId: user?.id as string,
+        UserDataId: user?.UserData?.id as string,
         containersName: container?.name as string,
         cloudflare_record_id: create_dns.id as string,
         cloudflare_zone: process.env.CLOUDFLARE_ZONE_ID as string
@@ -152,6 +155,9 @@ export async function editInboundRule({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
 
@@ -171,7 +177,7 @@ export async function editInboundRule({
     const inbound_rule = await prisma.inbound_rules.findUnique({
       where: {
         id: inbound_rule_id,
-        userId: user?.id as string
+        UserDataId: user?.UserData?.id as string
       }
     })
 
@@ -215,14 +221,14 @@ export async function editInboundRule({
         name: domain_name,
         content: process.env.ORACLE_NODE_IP as string,
         proxied: true,
-        comment: user?.id as string
+        comment: user?.UserData?.id as string
       }
     )
 
     await prisma.inbound_rules.update({
       where: {
         id: inbound_rule_id,
-        userId: user?.id as string
+        UserDataId: user?.UserData?.id as string
       },
       data: {
         rule_name: config_name,
@@ -256,12 +262,15 @@ export async function deleteInboundRule({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
     const rule = await prisma.inbound_rules.findUnique({
       where: {
         id: inbound_rule_id,
-        userId: user?.id as string
+        UserDataId: user?.UserData?.id as string
       }
     })
     if (!rule) {

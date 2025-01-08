@@ -31,20 +31,26 @@ async function VpcPage() {
       email: session?.user?.email as string
     },
     include: {
-      vpc: {
-        select: {
-          id: true,
-          vpc_name: true,
-          cidr: true,
-          gateway: true
+      UserData: {
+        include: {
+          vpc: {
+            select: {
+              id: true,
+              vpc_name: true,
+              cidr: true,
+              gateway: true
+            }
+          }
         }
       }
     }
   })
 
-  let vpcs = user?.vpc || []
+  let vpcs = user?.UserData?.vpc || []
   vpcs = vpcs.filter((vpc) => vpc.vpc_name !== "Default")
-  const defaultVPC = user?.vpc.find((vpc) => vpc.vpc_name === "Default")
+  const defaultVPC = user?.UserData?.vpc.find(
+    (vpc) => vpc.vpc_name === "Default"
+  )
   return (
     <div className="m-2 md:m-6 space-y-2 md:space-y-4">
       <div className="flex justify-between items-center">

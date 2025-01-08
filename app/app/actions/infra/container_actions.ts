@@ -19,12 +19,15 @@ export async function startContainer({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
     const container = await prisma.containers.findUnique({
       where: {
         name: container_name,
-        userId: user?.id
+        UserDataId: user?.UserData?.id as string
       }
     })
     if (!container) {
@@ -78,13 +81,16 @@ export async function stopContainer({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
 
     const container = await prisma.containers.findUnique({
       where: {
         name: container_name,
-        userId: user?.id
+        UserDataId: user?.UserData?.id as string
       }
     })
 
@@ -140,13 +146,16 @@ export async function deleteContainer({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
 
     const container = await prisma.containers.findUnique({
       where: {
         name: container_name,
-        userId: user?.id
+        UserDataId: user?.UserData?.id as string
       },
       include: {
         ssh_config: true
@@ -179,7 +188,7 @@ export async function deleteContainer({
       INFRA_BE_URL + "/authorized_keys",
       {
         data: {
-          user_id: user?.id,
+          userData_id: user?.UserData?.id,
           container_name: container_name
         }
       }
@@ -243,13 +252,16 @@ export async function restartContainer({
     const user = await prisma.user.findUnique({
       where: {
         email: userEmail
+      },
+      include: {
+        UserData: true
       }
     })
 
     const container = await prisma.containers.findUnique({
       where: {
         name: container_name,
-        userId: user?.id
+        UserDataId: user?.UserData?.id as string
       }
     })
 
@@ -309,12 +321,18 @@ export async function createContainer({
         message: "Error, Invalid input"
       }
     }
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail
+      },
+      include: {
+        UserData: true
+      }
+    })
     const vpc = await prisma.vpc.findUnique({
       where: {
         id: vpc_id,
-        User: {
-          email: userEmail
-        }
+        UserDataId: user?.UserData?.id as string
       }
     })
     const sshKey = await prisma.ssh_keys.findUnique({
@@ -336,9 +354,9 @@ export async function createContainer({
     }
     const ContainerName = uuid()
 
-    const user = await prisma.user.findUnique({
+    const userData = await prisma.userData.findUnique({
       where: {
-        email: userEmail
+        id: user?.UserData?.id as string
       },
       include: {
         resources_limit: true,
@@ -347,8 +365,8 @@ export async function createContainer({
     })
 
     if (
-      (user?.containers.length as number) >=
-      (user?.resources_limit.container_limit as number)
+      (userData?.containers.length as number) >=
+      (userData?.resources_limit.container_limit as number)
     ) {
       return {
         success: false,
@@ -372,7 +390,7 @@ export async function createContainer({
     const create_authorized_key = await axios.post(
       INFRA_BE_URL + "/authorized_keys",
       {
-        user_id: user?.id,
+        userData_id: user?.UserData?.id,
         ssh_public_key: sshKey.public_key,
         container_name: ContainerName
       }
@@ -393,7 +411,7 @@ export async function createContainer({
         tag: "1.2",
         network: vpc?.id,
         storage: "3G",
-        user_id: user?.id
+        userData_id: user?.UserData?.id
       }
     )
 
@@ -433,7 +451,7 @@ export async function createContainer({
         ssh_proxy_port: available_ssh_proxy_port.ssh_proxy_port,
         ssh_tunnel_process_id: sshTunnelResponse.data.ssh_tunnel_pid,
         available_ssh_proxy_portsId: available_ssh_proxy_port.id,
-        userId: user?.id as string
+        UserDataId: user?.UserData?.id as string
       }
     })
 
@@ -448,7 +466,7 @@ export async function createContainer({
         state: $Enums.CONTAINER_STATE.STARTED,
         vpcId: vpc?.id as string,
         ip_address: containerIP,
-        userId: user?.id as string,
+        UserDataId: user?.UserData?.id as string,
         ssh_config_id: ssh_config.id,
         ssh_keysId: sshKey.id
       }

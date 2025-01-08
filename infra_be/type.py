@@ -9,7 +9,7 @@ class ContainerData(BaseModel):
     tag: str
     network: str
     storage: str
-    user_id: str
+    userData_id: str
 
 
 class ContainerReturnData(BaseModel):
@@ -103,7 +103,7 @@ class DeleteSSHTunnelReturnData(BaseModel):
 
 
 class AuthorizedKeysData(BaseModel):
-    user_id: str
+    userData_id: str
     ssh_public_key: str
     container_name: str
 
@@ -113,7 +113,7 @@ class AuthorizedKeysReturnData(BaseModel):
 
 
 class DeleteAuthorizedKeysData(BaseModel):
-    user_id: str
+    userData_id: str
     container_name: str
 
 
@@ -130,7 +130,7 @@ class SSHKeyGenReturnData(BaseModel):
 
 
 class InitUserData(BaseModel):
-    user_id: str
+    userData_id: str
 
 
 class InitUserReturnData(BaseModel):

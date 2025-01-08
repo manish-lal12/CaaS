@@ -4,4 +4,4 @@
   tasks:
     - name: Delete SSH authorized key file
       ansible.builtin.shell: >
-        rm -rf /caas/ssh_keys/{{ user_id }}/{{ container_name }}
+        rm -rf /caas/ssh_keys/{{ userData_id }}/{{ container_name }}

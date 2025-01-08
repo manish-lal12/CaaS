@@ -16,4 +16,4 @@
           - name: "{{ network }}"
         state: started
         volumes:
-          - "/caas/ssh_keys/{{ user_id }}/{{ container_name }}/authorized_keys:/root/.ssh/authorized_keys"
+          - "/caas/ssh_keys/{{ userData_id }}/{{ container_name }}/authorized_keys:/root/.ssh/authorized_keys"

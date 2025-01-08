@@ -11,6 +11,9 @@ export async function CreateAndSaveSSHKey({ key_name }: { key_name: string }) {
   const user = await prisma.user.findUnique({
     where: {
       email: session?.user?.email as string
+    },
+    include: {
+      UserData: true
     }
   })
   const { data } = await axios.get(INFRA_BE_URL + "/gensshkey")
@@ -20,7 +23,7 @@ export async function CreateAndSaveSSHKey({ key_name }: { key_name: string }) {
         nick_name: key_name,
         public_key: data.public_key,
         private_key: data.private_key,
-        userId: user?.id as string
+        UserDataId: user?.UserData?.id as string
       }
     })
     return {
@@ -51,6 +54,9 @@ export async function SaveSSHKey({
   const user = await prisma.user.findUnique({
     where: {
       email: session?.user?.email as string
+    },
+    include: {
+      UserData: true
     }
   })
   const public_key = SshPK.parsePrivateKey(private_key)
@@ -62,7 +68,7 @@ export async function SaveSSHKey({
         nick_name: key_name,
         public_key: public_key,
         private_key: private_key,
-        userId: user?.id as string
+        UserDataId: user?.UserData?.id as string
       }
     })
     return {

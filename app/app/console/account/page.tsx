@@ -22,12 +22,17 @@ async function Profile() {
       email: session?.user?.email as string
     },
     include: {
-      ssh_keys: {
+      UserData: {
         select: {
-          nick_name: true,
-          id: true,
-          private_key: true,
-          public_key: true
+          ssh_keys: {
+            select: {
+              nick_name: true,
+              id: true,
+              private_key: true,
+              public_key: true
+            }
+          },
+          username: true
         }
       }
     }
@@ -65,7 +70,7 @@ async function Profile() {
             </div>
             <div>
               <div className="font-bold">User Name</div>
-              <div>{user?.username}</div>
+              <div>{user?.UserData?.username}</div>
             </div>
           </div>
         </div>
@@ -110,7 +115,7 @@ async function Profile() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {user?.ssh_keys.map((ssh_key) => (
+                {user?.UserData?.ssh_keys.map((ssh_key) => (
                   <TableRow key={ssh_key.id}>
                     <TableCell className="font-medium">
                       {ssh_key.nick_name}

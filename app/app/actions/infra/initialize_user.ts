@@ -15,7 +15,15 @@ export async function initializeUser({ username }: { username: string }) {
         email: userEmail
       }
     })
-    const userID = user?.id as string
+
+    const resource_limit = await prisma.resources_limit.create({})
+
+    const useData = await prisma.userData.create({
+      data: {
+        userId: user?.id as string,
+        resources_limitId: resource_limit.id
+      }
+    })
 
     const availableVPC = await prisma.available_vpc.findFirst({
       where: {
@@ -42,7 +50,7 @@ export async function initializeUser({ username }: { username: string }) {
     }
 
     const create_ssh_folder = await axios.post(INFRA_BE_URL + "/init_user", {
-      user_id: userID
+      userData_id: useData.id
     })
 
     if (create_ssh_folder.data.return_code !== 0) {
@@ -61,7 +69,7 @@ export async function initializeUser({ username }: { username: string }) {
           network: availableVPC?.network as string,
           cidr: availableVPC?.cidr as string,
           gateway: availableVPC?.gateway as string,
-          userId: userID,
+          UserDataId: useData.id,
           available_vpcId: availableVPC?.id as string
         }
       })
@@ -73,15 +81,12 @@ export async function initializeUser({ username }: { username: string }) {
           used: true
         }
       })
-      const res_limit = await tx.resources_limit.create({})
-      await prisma.user.update({
+      await tx.userData.update({
         where: {
-          id: user?.id
+          id: useData.id
         },
         data: {
-          username: username,
-          welcomed: true,
-          resources_limitId: res_limit.id
+          username: username
         }
       })
     })
