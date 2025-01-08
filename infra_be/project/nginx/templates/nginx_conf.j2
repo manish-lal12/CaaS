@@ -1,8 +1,8 @@
 server {
     listen 443 ssl;
-    server_name {{domain_name}};
-    ssl_certificate /etc/nginx/conf.d/Certs/aaraz.me/aaraz_ca_certificate.pem;
-    ssl_certificate_key /etc/nginx/conf.d/Certs/aaraz.me/aaraz_origin_private.pem;
+    server_name {{domain_name}}.opendev.me;
+    ssl_certificate /etc/nginx/conf.d/Certs/opendev.me/opendev_ca_certificate.pem;
+    ssl_certificate_key /etc/nginx/conf.d/Certs/opendev.me/opendev_origin_private.pem;
     location / {
         proxy_pass {{protocol}}://{{ip}}:{{port}}$request_uri;
         access_log /var/log/nginx/{{container_name}}_{{config_id}}.access.log;

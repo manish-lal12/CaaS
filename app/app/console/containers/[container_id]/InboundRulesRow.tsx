@@ -101,6 +101,7 @@ function InboundRulesRow({
     if (res.success) {
       router.refresh()
       toast.success("Inbound rule deleted successfully")
+      setDeleteInboundRule({ ...deleteInboundRuleState, loading: false })
       alert("Inbound rule deleted successfully")
     } else {
       setDeleteInboundRule({

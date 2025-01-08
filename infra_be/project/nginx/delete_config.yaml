@@ -10,3 +10,5 @@
       ansible.builtin.file:
         path: /var/log/nginx/{{ container_name }}_{{ config_id }}.access.log
         state: absent
+    - name: Reload nginx
+      ansible.builtin.command: "nginx -s reload"

@@ -7,7 +7,5 @@
         src: templates/nginx_conf.j2
         dest: /etc/nginx/conf.d/{{ container_name }}_{{ config_id }}.conf
         mode: "0644"
-    # - name: Restart nginx
-    #   ansible.builtin.service:
-    #     name: nginx
-    #     state: restarted
+    - name: Reload nginx
+      ansible.builtin.command: "nginx -s reload"
