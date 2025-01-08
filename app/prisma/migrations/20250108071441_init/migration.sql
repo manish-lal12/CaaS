@@ -10,10 +10,19 @@ CREATE TABLE "User" (
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "username" TEXT,
-    "welcomed" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserData" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "username" TEXT,
+    "welcomed" BOOLEAN NOT NULL DEFAULT false,
+    "resources_limitId" TEXT NOT NULL,
+
+    CONSTRAINT "UserData_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -77,7 +86,7 @@ CREATE TABLE "vpc" (
     "gateway" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "UserDataId" TEXT NOT NULL,
     "available_vpcId" TEXT NOT NULL,
 
     CONSTRAINT "vpc_pkey" PRIMARY KEY ("id")
@@ -95,7 +104,7 @@ CREATE TABLE "containers" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "vpcId" TEXT NOT NULL,
     "ip_address" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "UserDataId" TEXT NOT NULL,
     "ssh_config_id" TEXT NOT NULL,
     "ssh_keysId" TEXT NOT NULL,
 
@@ -113,7 +122,7 @@ CREATE TABLE "inbound_rules" (
     "port" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "UserDataId" TEXT NOT NULL,
     "containersName" TEXT NOT NULL,
     "cloudflare_zone" TEXT NOT NULL,
     "cloudflare_record_id" TEXT NOT NULL,
@@ -141,7 +150,7 @@ CREATE TABLE "ssh_config" (
     "ssh_tunnel_process_id" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "UserDataId" TEXT NOT NULL,
     "available_ssh_proxy_portsId" TEXT NOT NULL,
 
     CONSTRAINT "ssh_config_pkey" PRIMARY KEY ("id")
@@ -165,13 +174,30 @@ CREATE TABLE "ssh_keys" (
     "private_key" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "UserDataId" TEXT NOT NULL,
 
     CONSTRAINT "ssh_keys_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "resources_limit" (
+    "id" TEXT NOT NULL,
+    "vpc_limit" INTEGER NOT NULL DEFAULT 2,
+    "container_limit" INTEGER NOT NULL DEFAULT 2,
+    "ssh_key_limit" INTEGER NOT NULL DEFAULT 2,
+    "inbound_rule_limit" INTEGER NOT NULL DEFAULT 5,
+
+    CONSTRAINT "resources_limit_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserData_userId_key" ON "UserData"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserData_resources_limitId_key" ON "UserData"("resources_limitId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
@@ -192,6 +218,12 @@ CREATE UNIQUE INDEX "inbound_rules_domain_name_key" ON "inbound_rules"("domain_n
 CREATE UNIQUE INDEX "ssh_config_available_ssh_proxy_portsId_key" ON "ssh_config"("available_ssh_proxy_portsId");
 
 -- AddForeignKey
+ALTER TABLE "UserData" ADD CONSTRAINT "UserData_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserData" ADD CONSTRAINT "UserData_resources_limitId_fkey" FOREIGN KEY ("resources_limitId") REFERENCES "resources_limit"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -201,7 +233,7 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Authenticator" ADD CONSTRAINT "Authenticator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "vpc" ADD CONSTRAINT "vpc_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "vpc" ADD CONSTRAINT "vpc_UserDataId_fkey" FOREIGN KEY ("UserDataId") REFERENCES "UserData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "vpc" ADD CONSTRAINT "vpc_available_vpcId_fkey" FOREIGN KEY ("available_vpcId") REFERENCES "available_vpc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -210,7 +242,7 @@ ALTER TABLE "vpc" ADD CONSTRAINT "vpc_available_vpcId_fkey" FOREIGN KEY ("availa
 ALTER TABLE "containers" ADD CONSTRAINT "containers_vpcId_fkey" FOREIGN KEY ("vpcId") REFERENCES "vpc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "containers" ADD CONSTRAINT "containers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "containers" ADD CONSTRAINT "containers_UserDataId_fkey" FOREIGN KEY ("UserDataId") REFERENCES "UserData"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "containers" ADD CONSTRAINT "containers_ssh_config_id_fkey" FOREIGN KEY ("ssh_config_id") REFERENCES "ssh_config"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -219,16 +251,16 @@ ALTER TABLE "containers" ADD CONSTRAINT "containers_ssh_config_id_fkey" FOREIGN 
 ALTER TABLE "containers" ADD CONSTRAINT "containers_ssh_keysId_fkey" FOREIGN KEY ("ssh_keysId") REFERENCES "ssh_keys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inbound_rules" ADD CONSTRAINT "inbound_rules_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "inbound_rules" ADD CONSTRAINT "inbound_rules_UserDataId_fkey" FOREIGN KEY ("UserDataId") REFERENCES "UserData"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "inbound_rules" ADD CONSTRAINT "inbound_rules_containersName_fkey" FOREIGN KEY ("containersName") REFERENCES "containers"("name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ssh_config" ADD CONSTRAINT "ssh_config_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ssh_config" ADD CONSTRAINT "ssh_config_UserDataId_fkey" FOREIGN KEY ("UserDataId") REFERENCES "UserData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ssh_config" ADD CONSTRAINT "ssh_config_available_ssh_proxy_portsId_fkey" FOREIGN KEY ("available_ssh_proxy_portsId") REFERENCES "available_ssh_proxy_ports"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ssh_keys" ADD CONSTRAINT "ssh_keys_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ssh_keys" ADD CONSTRAINT "ssh_keys_UserDataId_fkey" FOREIGN KEY ("UserDataId") REFERENCES "UserData"("id") ON DELETE CASCADE ON UPDATE CASCADE;

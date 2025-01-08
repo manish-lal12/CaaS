@@ -16,7 +16,9 @@ export async function initializeUser({ username }: { username: string }) {
       }
     })
 
-    const resource_limit = await prisma.resources_limit.create({})
+    const resource_limit = await prisma.resources_limit.create({
+      data: {}
+    })
 
     const useData = await prisma.userData.create({
       data: {
@@ -86,7 +88,8 @@ export async function initializeUser({ username }: { username: string }) {
           id: useData.id
         },
         data: {
-          username: username
+          username: username,
+          welcomed: true
         }
       })
     })

@@ -29,6 +29,32 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
       }
     })
     const networkID = uuid()
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail
+      },
+      include: {
+        UserData: {
+          select: {
+            id: true,
+            vpc: true,
+            resources_limit: true
+          }
+        }
+      }
+    })
+
+    if (
+      (user?.UserData?.vpc.length as number) >=
+      (user?.UserData?.resources_limit.vpc_limit as number)
+    ) {
+      return {
+        success: false,
+        message: "VPC limit reached"
+      }
+    }
+
     const createVPCResponse = await axios.post(INFRA_BE_URL + "/network", {
       network_name: networkID,
       network_subnet: availableVPC?.cidr,
@@ -40,14 +66,7 @@ export async function createVPC({ vpc_name }: { vpc_name: string }) {
         message: "Error, failed to create VPC"
       }
     }
-    const user = await prisma.user.findUnique({
-      where: {
-        email: userEmail
-      },
-      include: {
-        UserData: true
-      }
-    })
+
     await prisma.$transaction(async (tx) => {
       await tx.vpc.create({
         data: {
