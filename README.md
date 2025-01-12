@@ -18,7 +18,7 @@ This project is build with an aim to replace VMs with containers in a cloud envi
 - SSH Tunnels
 
 ## Architecture of the system
-![Untitled-2024-06-23-1246](https://github.com/user-attachments/assets/7d1399c4-d6ca-435f-b86f-1d938384cac8)
+![Untitled-2024-06-23-1246](https://github.com/user-attachments/assets/7625c1f4-296d-4974-a252-89c482c26b7c)
 
 ## Architecture of SSH proxy
 ![ssh_proxy](https://github.com/user-attachments/assets/8c7439b9-82a9-47b8-8314-cab763b938a8)
