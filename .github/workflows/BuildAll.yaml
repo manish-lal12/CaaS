@@ -17,7 +17,7 @@ on:
         type: string
 
 jobs:
-  build_test:
+  build_push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
