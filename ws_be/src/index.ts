@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { createServer } from "http";
 import { terminal_wss } from "./ws_routes/terminal";
 import express, { Request, Response } from "express";

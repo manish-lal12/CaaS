@@ -26,7 +26,7 @@ async function main() {
     const temp = []
     for (let i = 2000; i <= 2200; i++) {
       temp.push({
-        ssh_proxy_node_name: "dady",
+        ssh_proxy_node_name: "dockerhost",
         ssh_proxy_port: i,
         used: false
       })

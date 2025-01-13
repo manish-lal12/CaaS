@@ -10,14 +10,14 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://opendev.me",
+  url: "https://opendev.me/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/",
+  baseUrl: "/documentation/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "opendev", // Usually your GitHub org/user name.
+  organizationName: "anisharaz", // Usually your GitHub org/user name.
   projectName: "caas", // Usually your repo name.
 
   onBrokenLinks: "throw",
@@ -69,7 +69,7 @@ const config: Config = {
       title: "Documentation",
       logo: {
         alt: "My Site Logo",
-        src: "https://static.aaraz.me/caas/logo.svg",
+        src: "https://static.aaraz.me/caas/logo_light.svg",
       },
       items: [
         {
